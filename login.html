@@ -6,6 +6,7 @@
 <title>Acceso - Hikari Play</title>
 <link href="css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   body {
     background: #0b0c10;
@@ -60,8 +61,32 @@
     font-size: 0.95rem;
   }
   .form-group input:focus { border-color: #4079ff; outline: none; }
+
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .password-wrapper input {
+    padding-right: 42px;
+  }
+  .btn-toggle-pass {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #7d8597;
+    cursor: pointer;
+    font-size: 0.95rem;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .btn-toggle-pass:hover {
+    color: #fff;
+  }
   
   .error-msg { color: #ff453a; font-size: 0.82rem; margin-top: 6px; display: none; font-weight: bold; }
+  .info-msg { color: #30d158; font-size: 0.82rem; margin-top: 8px; display: none; font-weight: bold; }
   
   .btn-submit {
     width: 100%;
@@ -167,11 +192,17 @@
       <input type="email" id="email" required placeholder="tu@correo.com">
       <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
       <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
+      <div id="resetInfoMsg" class="info-msg"></div>
     </div>
     
     <div class="form-group">
       <label>Contraseña</label>
-      <input type="password" id="password" required placeholder="••••••••">
+      <div class="password-wrapper">
+        <input type="password" id="password" required placeholder="••••••••">
+        <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" onclick="togglePasswordVisibility()" title="Mostrar u ocultar contraseña">
+          <i class="fas fa-eye" id="passwordEyeIcon"></i>
+        </button>
+      </div>
     </div>
 
     <button type="submit" id="submitBtn" class="btn-submit">Ingresar</button>
@@ -179,7 +210,7 @@
 
   <div class="extra-links">
     <a href="#" id="toggleModeBtn" onclick="toggleMode(event)">¿No tienes cuenta? Regístrate</a>
-    <a href="#" onclick="alert('Se ha enviado un enlace de recuperación a tu correo.')">¿Olvidaste tu contraseña?</a>
+    <a href="#" id="forgotPassBtn" onclick="handleForgotPassword(event)">¿Olvidaste tu contraseña?</a>
   </div>
 
   <div class="divider">o conéctate con</div>
@@ -202,8 +233,18 @@
 </div>
 
 <script>
-// URL FIJA Y EXACTA DE GITHUB PAGES EN MINÚSCULAS
 const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html";
+
+// CONFIGURACIÓN DE EMAILJS (REEMPLAZA ESTOS 3 VALORES CON LOS TUYOS)
+const EMAILJS_CONFIG = {
+  publicKey: "TU_EMAILJS_PUBLIC_KEY",
+  serviceId: "TU_EMAILJS_SERVICE_ID",
+  templateId: "TU_EMAILJS_TEMPLATE_ID"
+};
+
+if (window.emailjs && EMAILJS_CONFIG.publicKey !== "TU_EMAILJS_PUBLIC_KEY") {
+  emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
+}
 
 const OAUTH_CONFIG = {
   Google: {
@@ -228,8 +269,100 @@ const OAUTH_CONFIG = {
 
 let isRegistering = false;
 
+function togglePasswordVisibility() {
+  const passInput = document.getElementById("password");
+  const eyeIcon = document.getElementById("passwordEyeIcon");
+  const isHidden = passInput.type === "password";
+
+  passInput.type = isHidden ? "text" : "password";
+  eyeIcon.classList.toggle("fa-eye", !isHidden);
+  eyeIcon.classList.toggle("fa-eye-slash", isHidden);
+}
+
+async function handleForgotPassword(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const emailField = document.getElementById("email");
+  const resetMsg = document.getElementById("resetInfoMsg");
+  const forgotBtn = document.getElementById("forgotPassBtn");
+  const emailInput = emailField.value.trim().toLowerCase();
+
+  if (!emailInput) {
+    emailField.focus();
+    alert("Escribe primero tu correo electrónico en el campo de correo para enviar el código.");
+    return;
+  }
+
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+
+  if (!usersDb[emailInput]) {
+    document.getElementById("emailError").style.display = "block";
+    return;
+  }
+
+  if (
+    !window.emailjs ||
+    EMAILJS_CONFIG.publicKey === "FS0bgMDeemgaOliNd" ||
+    EMAILJS_CONFIG.serviceId === "service_4is8eij" ||
+    EMAILJS_CONFIG.templateId === "service_4is8eij"
+  ) {
+    alert("Configura primero tu Public Key, Service ID y Template ID de EmailJS en EMAILJS_CONFIG.");
+    return;
+  }
+
+  const recoveryCode = String(Math.floor(100000 + Math.random() * 900000));
+  const originalBtnText = forgotBtn.textContent;
+  forgotBtn.textContent = "Enviando correo...";
+  forgotBtn.style.pointerEvents = "none";
+
+  try {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: emailInput,
+      email: emailInput,
+      username: usersDb[emailInput].username || emailInput,
+      recovery_code: recoveryCode,
+      app_name: "Hikari Play"
+    });
+
+    resetMsg.textContent = "Correo enviado. Revisa tu bandeja de entrada o spam.";
+    resetMsg.style.display = "block";
+
+    const enteredCode = prompt(
+      `Se envió un código de recuperación a ${emailInput} vía EmailJS. Escríbelo aquí:`
+    );
+
+    if (enteredCode === null) return;
+
+    if (enteredCode.trim() !== recoveryCode) {
+      alert("El código ingresado no coincide con el enviado a tu correo.");
+      return;
+    }
+
+    const newPassword = prompt("Escribe tu nueva contraseña (mínimo 6 caracteres):");
+    if (!newPassword || newPassword.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    usersDb[emailInput].password = newPassword;
+    localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+
+    resetMsg.textContent = "Contraseña actualizada correctamente. Ya puedes iniciar sesión.";
+    resetMsg.style.display = "block";
+  } catch (err) {
+    console.error("Error enviando correo con EmailJS:", err);
+    alert("No se pudo enviar el correo con EmailJS. Revisa tu Service ID, Template ID, Public Key y variables de la plantilla.");
+  } finally {
+    forgotBtn.textContent = originalBtnText;
+    forgotBtn.style.pointerEvents = "auto";
+  }
+}
+
 function clearErrors() {
   document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
+  const resetMsg = document.getElementById("resetInfoMsg");
+  if (resetMsg) resetMsg.style.display = "none";
 }
 
 function toggleMode(e) {
@@ -254,7 +387,6 @@ function toggleMode(e) {
   }
 }
 
-// 1. Redirigir a la página oficial usando siempre el enlace de GitHub Pages
 function redirectToOfficialOAuth(provider) {
   const config = OAUTH_CONFIG[provider];
   sessionStorage.setItem("pendingOAuthProvider", provider);
@@ -265,7 +397,6 @@ function redirectToOfficialOAuth(provider) {
   window.location.href = targetUrl;
 }
 
-// 2. Recibir la confirmación de Discord/GitHub/Google y obtener los datos de la cuenta
 window.addEventListener("DOMContentLoaded", async () => {
   const hash = window.location.hash;
   const search = window.location.search;
@@ -287,7 +418,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     let realFullname = "";
     let realAvatar = "";
 
-    // Autenticación con Google
     if (pendingProvider === "Google" && accessToken) {
       try {
         const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
@@ -308,7 +438,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    // Autenticación con Discord
     if (pendingProvider === "Discord" && accessToken) {
       try {
         const res = await fetch("https://discord.com/api/users/@me", {
@@ -329,7 +458,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    // Autenticación con GitHub (responde con ?code=)
     if (pendingProvider === "GitHub" && search.includes("code=")) {
       realUsername = "gh_user_" + Math.floor(Math.random() * 9000 + 1000);
       realEmail = `${realUsername}@github.oauth.local`;
@@ -359,7 +487,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (existing.age) localStorage.setItem("hikariAge", existing.age);
       if (existing.likes) localStorage.setItem("hikariLikes", JSON.stringify(existing.likes));
 
-      alert(`✅ ¡Bienvenido de nuevo! Sesión iniciada con tu cuenta de ${pendingProvider}.`);
+      alert(`Bienvenido de nuevo. Sesión iniciada con ${pendingProvider}.`);
       window.location.href = "perfil.html";
     } else {
       if (usernamesList.includes(realUsername)) {
@@ -385,18 +513,18 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (realAvatar) localStorage.setItem("hikariAvatar", realAvatar);
       localStorage.setItem("hikariJoinDate", joinDate);
 
-      alert(`✅ Cuenta vinculada con ${pendingProvider}. Completa tu perfil para terminar.`);
+      alert(`Cuenta vinculada con ${pendingProvider}. Completa tu perfil para terminar.`);
       window.location.href = "editar-perfil.html";
     }
   }
 });
 
-// 3. Manejo del formulario tradicional (Correo y Contraseña)
 document.getElementById("authForm").addEventListener("submit", function(e) {
   e.preventDefault();
   clearErrors();
 
   const emailInput = document.getElementById("email").value.trim().toLowerCase();
+  const passwordInput = document.getElementById("password").value;
   let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
   let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
 
@@ -418,6 +546,7 @@ document.getElementById("authForm").addEventListener("submit", function(e) {
       email: emailInput,
       username: usernameInput,
       fullname: usernameInput,
+      password: passwordInput,
       joinDate: joinDate
     };
 
@@ -440,6 +569,11 @@ document.getElementById("authForm").addEventListener("submit", function(e) {
     }
 
     const userData = usersDb[emailInput];
+    if (userData.password && userData.password !== passwordInput) {
+      alert("Contraseña incorrecta. Revisa tus datos o usa '¿Olvidaste tu contraseña?'.");
+      return;
+    }
+
     localStorage.setItem("hikariUserLoggedIn", "true");
     localStorage.setItem("hikariCurrentEmail", emailInput);
     localStorage.setItem("hikariUsername", userData.username);
@@ -454,11 +588,10 @@ document.getElementById("authForm").addEventListener("submit", function(e) {
   }
 });
 
-// 4. Función para borrar todas las cuentas registradas
 function clearAllRegisteredAccounts() {
   if (confirm("¿Seguro que quieres borrar TODAS las cuentas y nombres de usuario registrados en la app?")) {
     localStorage.clear();
-    alert("✅ Todas las cuentas registradas han sido eliminadas.");
+    alert("Todas las cuentas registradas han sido eliminadas.");
     window.location.reload();
   }
 }
