@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html dir='ltr' lang='es'>
+<head>
+<meta charset='UTF-8' />
+<meta content='width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='IE=edge' http-equiv='X-UA-Compatible' />
+<meta content='max-image-preview:large' name='robots' />
+<meta name="google" content="notranslate">
+<title>Chat Global - Hikari Play</title>
+
+<!-- Enlace al CSS local -->
+<link href="css/style.css" rel="stylesheet">
+<!-- Enlace al CSS base original de la plantilla -->
+<link href="https://dl.dropbox.com/s/83ley00l5ongj2v/style.css" rel="stylesheet">
+
+<script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+<link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="apple-touch-icon" href="img/Logo.png">
+
+<style>
+  /* Estilos del Chat Global integrados dentro de la plantilla */
+  .chat-container {
+    max-width: 720px;
+    margin: 15px auto 20px auto;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 95px);
+    height: calc(100dvh - 95px);
+  }
+
+  .chat-box-card {
+    flex: 1;
+    background: #15171e;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .chat-room-bar {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chat-room-title {
+    font-size: 0.98rem;
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .online-pill {
+    font-size: 0.72rem;
+    background: rgba(52, 199, 89, 0.15);
+    color: #34c759;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-weight: bold;
+  }
+
+  .messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+
+  .system-notice {
+    text-align: center;
+    font-size: 0.76rem;
+    color: #8a92a6;
+    background: rgba(255,255,255,0.04);
+    padding: 7px 12px;
+    border-radius: 10px;
+    margin: 0 auto 6px auto;
+  }
+
+  .msg-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 9px;
+    max-width: 85%;
+  }
+
+  .msg-row.own {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .msg-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #4079ff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .msg-bubble {
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 8px 12px;
+    border-radius: 14px 14px 14px 4px;
+    word-break: break-word;
+  }
+
+  .msg-row.own .msg-bubble {
+    background: #4079ff;
+    border-color: #4079ff;
+    border-radius: 14px 14px 4px 14px;
+  }
+
+  .msg-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 2px;
+  }
+
+  .msg-author {
+    font-size: 0.76rem;
+    font-weight: bold;
+    color: #6ea0ff;
+    cursor: pointer;
+  }
+
+  .msg-row.own .msg-author {
+    color: rgba(255,255,255,0.9);
+  }
+
+  .msg-time {
+    font-size: 0.66rem;
+    color: #8a92a6;
+  }
+
+  .msg-row.own .msg-time {
+    color: rgba(255,255,255,0.75);
+  }
+
+  .msg-text {
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: #f5f5f5;
+  }
+
+  /* Barra de emojis */
+  .emoji-bar {
+    background: #12141b;
+    padding: 7px 12px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .emoji-bar::-webkit-scrollbar { display: none; }
+
+  .emoji-btn {
+    background: rgba(255,255,255,0.06);
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Barra de texto */
+  .chat-input-bar {
+    background: #1a1d26;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .chat-input-bar input {
+    flex: 1;
+    background: #12141b;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 9px 14px;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+  }
+
+  .send-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #4079ff;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* Modal Tarjeta de Perfil */
+  .mini-profile-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .mini-profile-modal.show { display: flex; }
+
+  .mini-card {
+    width: 290px;
+    background: #15171e;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    position: relative;
+    color: #fff;
+  }
+  .mini-banner {
+    height: 75px;
+    background: linear-gradient(135deg, #1f2833, #4079ff);
+  }
+  .mini-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .mini-content {
+    padding: 0 16px 18px 16px;
+    margin-top: -30px;
+  }
+  .mini-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    border: 3px solid #15171e;
+    object-fit: cover;
+    background: #000;
+  }
+  .mini-name { font-size: 1.05rem; font-weight: bold; margin-top: 6px; }
+  .mini-user { font-size: 0.78rem; color: #7d8597; margin-bottom: 8px; }
+  .mini-bio { font-size: 0.8rem; color: #ccc; margin-bottom: 12px; }
+  .mini-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+  .mini-tag { background: rgba(64,121,255,0.2); color: #6ea0ff; padding: 3px 9px; border-radius: 12px; font-size: 0.74rem; }
+</style>
+</head>
+<body class='oneGrd MN-2 mobS hdMn bD onIndx onHm' id='mainCont'>
+<script>/*<![CDATA[*/ (localStorage.getItem('mode')) === 'darkmode' ? document.querySelector('#mainCont').classList.add('drK') : document.querySelector('#mainCont').classList.remove('drK') /*]]>*/</script>
+
+<input class='prfI hidden' id='offPrf' type='checkbox' />
+<input class='navI hidden' id='offNav' type='checkbox' />
+
+<div class='mainWrp'>
+  <div class='no-items section' id='notif-widget'></div>
+  <header class='header' id='header'>
+    <div class='headCn'>
+      <div class='headD headL'>
+        <div class='headIc'>
+          <label class='tNav tIc bIc' for='offNav'>
+            <svg class='line' viewBox='0 0 24 24'><line x1='3' x2='21' y1='12' y2='12'></line><line x1='3' x2='21' y1='5' y2='5'></line><line x1='3' x2='21' y1='19' y2='19'></line></svg>
+          </label>
+        </div>
+        <div class='headN section' id='header-title'>
+          <div class='widget Header' data-version='2' id='Header1'>
+            <div class='headInnr'>
+              <h1 class='headH'><bdi><span style="color:#4079ff;">Hikari Play</span></bdi></h1>
+            </div>
+            <div class='headDsc hidden'>Best Place to get info about Technology, Gadgets, Online Earnings, etc, Also we share useful content related how to?, Banking , Investments, Mutual Funds etc.</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class='headD headR'>
+        <div class='headI'>
+          <div class='headS section' id='header-search'>
+            <div class='widget BlogSearch' data-version='2' id='BlogSearch1'></div>
+          </div>
+          <div class='headP section' id='header-icon'>
+            <div class='widget TextList' data-version='2' id='TextList000'>
+              <ul class='headIc'>
+                <li class='isDrk'>
+                  <span aria-label='Dark' class='tDark tIc tDL bIc' onclick='darkMode()' role='button'>
+                    <svg class='line' viewBox='0 0 24 24'>
+                      <g class='d1'><path d='M183.72453,170.371a10.4306,10.4306,0,0,1-.8987,3.793,11.19849,11.19849,0,0,1-5.73738,5.72881,10.43255,10.43255,0,0,1-3.77582.89138,1.99388,1.99388,0,0,0-1.52447,3.18176,10.82936,10.82936,0,1,0,15.118-15.11819A1.99364,1.99364,0,0,0,183.72453,170.371Z' transform='translate(-169.3959 -166.45548)'></path></g>
+                      <g class='d2'><path class='f' d='M12 18.5C15.5899 18.5 18.5 15.5899 18.5 12C18.5 8.41015 15.5899 5.5 12 5.5C8.41015 5.5 5.5 8.41015 5.5 12C5.5 15.5899 8.41015 18.5 12 18.5Z'></path><path d='M19.14 19.14L19.01 19.01M19.01 4.99L19.14 4.86L19.01 4.99ZM4.86 19.14L4.99 19.01L4.86 19.14ZM12 2.08V2V2.08ZM12 22V21.92V22ZM2.08 12H2H2.08ZM22 12H21.92H22ZM4.99 4.99L4.86 4.86L4.99 4.99Z' stroke-width='2'></path></g>
+                    </svg>
+                  </span>
+                </li>
+                <li>
+                  <a href="buscador.html">
+                    <span aria-label='Search' class='tSrch tIc bIc'>
+                      <svg class='line' viewBox='0 0 24 24'><g transform='translate(2.000000, 2.000000)'><circle cx='9.76659044' cy='9.76659044' r='8.9885584'></circle><line x1='16.0183067' x2='19.5423342' y1='16.4851259' y2='20.0000001'></line></g></svg>
+                    </span>
+                  </a>
+                </li>
+                <li id="auth-container">
+                  <a href="login.html">
+                    <span aria-label='Iniciar sesión' class='tSrch tIc bIc'>
+                      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2a5 5 0 1 0 5 5a5 5 0 0 0-5-5m0 8a3 3 0 1 1 3-3a3 3 0 0 1-3 3m9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class='widget Profile' data-version='2' id='Profile1'>
+              <div class='wPrf tm'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class='mainIn'>
+    <div class='blogMn'>
+      <div class='mnBr'>
+        <div class='mnBrs'>
+          <div class='mnH'>
+            <label aria-label='Close' class='c' data-text='Close' for='offNav'></label>
+          </div>
+          <div class='mnMob section' id='nav-widget-1'>
+            <div class='widget PageList' data-version='2' id='PageList002'>
+              <ul class='mMenu'>
+                <a>Telegram</a>                         
+                <a>Zerimar</a>
+              </ul>
+            </div>
+            <div class='widget LinkList' data-version='2' id='LinkList002'>
+              <div class='mNav'>
+                <label class='tIc bIc' for='offNav'>
+                  <svg viewBox='0 0 512 512'><path d='M417.4,224H288V94.6c0-16.9-14.3-30.6-32-30.6c-17.7,0-32,13.7-32,30.6V224H94.6C77.7,224,64,238.3,64,256 c0,17.7,13.7,32,30.6,32H224v129.4c0,16.9,14.3,30.6,32,30.6c17.7,0,32-13.7,32-30.6V288h129.4c16.9,0,30.6-14.3,30.6-32 C448,238.3,434.3,224,417.4,224z'></path></svg>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class='mnMen section' id='nav-widget-2'>
+            <div class='widget HTML' data-version='2' id='HTML000'>
+              <ul class='mnMn' itemscope='itemscope' itemtype='https://schema.org/SiteNavigationElement'>
+                <li class='drp br'></li>
+                <li class='br'>
+                  <a class='a' href='index.html' itemprop='url'>
+                    <span class="iconify" data-icon="entypo:home" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Home</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='peliculas.html' itemprop='url'>
+                    <span class="iconify" data-icon="bx:bxs-film" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Películas</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='series.html' itemprop='url'>
+                    <span class="iconify" data-icon="ic:outline-live-tv" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Series</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='chat.html' itemprop='url'>
+                    <span class="iconify" data-icon="ep:chat-dot-round" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Chat</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='go:Radio' itemprop='url'>
+                    <span class="iconify" data-icon="ion:radio-sharp" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Radio</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='http://www.e-droid.net/privacy.php?ida=758610&idl=es' itemprop='url'>
+                    <span class="iconify" data-icon="ic:baseline-privacy-tip" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso de privacidad</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='#' itemprop='url'>
+                    <span class="iconify" data-icon="jam:info-f" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Aviso Legal</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <label class='fCls' for='offNav'></label>
+    </div>
+  </div>
+</div>
+
+<!-- Sección Principal del Chat Global dentro de la misma interfaz -->
+<div class="chat-container">
+  <div class="chat-box-card">
+    <div class="chat-room-bar">
+      <div class="chat-room-title">
+        <i class="fas fa-comments" style="color:#4079ff;"></i>
+        <span>Chat Global</span>
+      </div>
+      <span class="online-pill">Solo texto y emojis</span>
+    </div>
+
+    <div id="messagesArea" class="messages-area"></div>
+
+    <!-- Barra de Emojis Rápidos -->
+    <div class="emoji-bar">
+      <button type="button" class="emoji-btn" onclick="addEmoji('😀')">😀</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('😂')">😂</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('🍿')">🍿</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('🎬')">🎬</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('😱')">😱</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('👏')">👏</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('✨')">✨</button>
+      <button type="button" class="emoji-btn" onclick="addEmoji('😎')">😎</button>
+    </div>
+
+    <form class="chat-input-bar" onsubmit="sendMessage(event)">
+      <input type="text" id="chatInput" placeholder="Escribe un mensaje o emoji..." maxlength="200" autocomplete="off" required>
+      <button type="submit" class="send-btn" title="Enviar"><i class="fas fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Perfil Rápido al tocar un usuario -->
+<div id="miniProfileModal" class="mini-profile-modal" onclick="closeMiniProfile(event)">
+  <div class="mini-card" onclick="event.stopPropagation()">
+    <button class="mini-close" onclick="document.getElementById('miniProfileModal').classList.remove('show')"><i class="fas fa-times"></i></button>
+    <div class="mini-banner"></div>
+    <div class="mini-content">
+      <img id="miniAvatar" class="mini-avatar" src="img/Logo.png" alt="Avatar">
+      <div id="miniName" class="mini-name">-</div>
+      <div id="miniUser" class="mini-user">@-</div>
+      <div id="miniBio" class="mini-bio">-</div>
+      <div id="miniTags" class="mini-tags"></div>
+    </div>
+  </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'></script>
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'></script>
+<script src='https://dl.dropbox.com/s/x2to4fmvv2ftcqn/xscript.js'></script>
+
+<script>
+  const demoProfiles = {
+    "sakura_chan": {
+      fullname: "Sakura",
+      username: "sakura_chan",
+      avatar: "img/Logo.png",
+      bio: "Recomendando animes y dramas todos los días.",
+      tags: ["Anime", "Música"]
+    },
+    "kenji_kun": {
+      fullname: "Kenji",
+      username: "kenji_kun",
+      avatar: "img/Logo.png",
+      bio: "Buscando qué ver esta noche 🍿",
+      tags: ["Series", "Videojuegos"]
+    }
+  };
+
+  const defaultMessages = [
+    {
+      id: 1,
+      userKey: "sakura_chan",
+      fullname: "Sakura",
+      username: "sakura_chan",
+      avatar: "img/Logo.png",
+      text: "¡Hola a todos! ¿Qué serie están viendo hoy? 🍿✨",
+      time: "19:10",
+      isOwn: false
+    },
+    {
+      id: 2,
+      userKey: "kenji_kun",
+      fullname: "Kenji",
+      username: "kenji_kun",
+      avatar: "img/Logo.png",
+      text: "Yo voy por el capítulo 4 de Estamos muertos 🔥",
+      time: "19:12",
+      isOwn: false
+    }
+  ];
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[tag]));
+  }
+
+  function getStoredMessages() {
+    const saved = localStorage.getItem("hikariGlobalChat");
+    return saved ? JSON.parse(saved) : defaultMessages;
+  }
+
+  function renderMessages() {
+    const area = document.getElementById("messagesArea");
+    const messages = getStoredMessages();
+
+    const noticeHTML = `
+      <div class="system-notice">
+        Sala Global de Hikari Play: solo se permite texto y emojis.
+      </div>
+    `;
+
+    const msgsHTML = messages.map(m => `
+      <div class="msg-row ${m.isOwn ? 'own' : ''}">
+        <img src="${m.avatar}" class="msg-avatar" alt="Avatar" onclick="openUserCard('${m.userKey}')">
+        <div class="msg-bubble">
+          <div class="msg-meta">
+            <span class="msg-author" onclick="openUserCard('${m.userKey}')">${escapeHTML(m.fullname)}</span>
+            <span class="msg-time">${m.time}</span>
+          </div>
+          <div class="msg-text">${escapeHTML(m.text)}</div>
+        </div>
+      </div>
+    `).join('');
+
+    area.innerHTML = noticeHTML + msgsHTML;
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function addEmoji(emoji) {
+    const input = document.getElementById("chatInput");
+    input.value += emoji;
+    input.focus();
+  }
+
+  function sendMessage(e) {
+    e.preventDefault();
+    const input = document.getElementById("chatInput");
+    const rawText = input.value.trim();
+    if (!rawText) return;
+
+    const now = new Date();
+    const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+
+    const newMsg = {
+      id: Date.now(),
+      userKey: "currentUser",
+      fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
+      username: localStorage.getItem("hikariUsername") || "usuario",
+      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      text: rawText,
+      time: timeStr,
+      isOwn: true
+    };
+
+    const messages = getStoredMessages();
+    messages.push(newMsg);
+    localStorage.setItem("hikariGlobalChat", JSON.stringify(messages));
+
+    input.value = "";
+    renderMessages();
+  }
+
+  function openUserCard(userKey) {
+    const u = demoProfiles[userKey] || {
+      fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
+      username: localStorage.getItem("hikariUsername") || "usuario",
+      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      bio: localStorage.getItem("hikariBio") || "Explorando Hikari Play.",
+      tags: JSON.parse(localStorage.getItem("hikariLikes") || '["Anime"]')
+    };
+
+    document.getElementById("miniName").textContent = u.fullname;
+    document.getElementById("miniUser").textContent = "@" + u.username;
+    document.getElementById("miniAvatar").src = u.avatar;
+    document.getElementById("miniBio").textContent = u.bio;
+    document.getElementById("miniTags").innerHTML = u.tags.map(t => `<span class="mini-tag">${escapeHTML(t)}</span>`).join('');
+
+    document.getElementById("miniProfileModal").classList.add("show");
+  }
+
+  function closeMiniProfile(e) {
+    if (e.target.id === "miniProfileModal") {
+      document.getElementById("miniProfileModal").classList.remove("show");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", renderMessages);
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
+</script>
+<script src="js/auth.js"></script>
+</body>
+</html>
