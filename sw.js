@@ -1,41 +1,35 @@
-const CACHE_NAME = 'hikari-play-v1';
-const assetsToCache = [
-  './index.html',
-  './series.html',
-  './peliculas.html',
-  './buscar.html',
-  './css/style.css'
+const CACHE_NAME = "hikari-play-v1";
+const ASSETS_TO_CACHE = [
+  "/hikari-play/",
+  "/hikari-play/index.html",
+  "/hikari-play/login.html",
+  "/hikari-play/perfil.html",
+  "/hikari-play/editar-perfil.html",
+  "/hikari-play/css/style.css",
+  "/hikari-play/img/Logo.png"
 ];
 
-// Instalación del Service Worker
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(assetsToCache);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
+  self.skipWaiting();
 });
 
-// Activación y limpieza de cachés antiguas
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      )
+    )
   );
+  self.clients.claim();
 });
 
-// Interceptar peticiones para cargar desde caché si falla la red
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });

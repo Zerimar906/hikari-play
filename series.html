@@ -2,7 +2,7 @@
 <html dir='ltr' lang='en'>
 <head>
 <meta charset='UTF-8' />
-<meta content='width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='width=device-width, user-scalable=1, initial-scale=1, minimum-scale=1, maximum-scale=5' name='viewport' />
 <meta content='IE=edge' http-equiv='X-UA-Compatible' />
 <meta content='max-image-preview:large' name='robots' />
 
@@ -197,7 +197,7 @@
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
+      navigator.serviceWorker.register('/hikari-play/sw.js')
         .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
         .catch((err) => console.log('Error al registrar el Service Worker:', err));
     });

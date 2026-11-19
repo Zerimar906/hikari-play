@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reproductor Social - Hikari Play</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/Logo.png">
+<meta name="theme-color" content="#000000">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'PT Sans', sans-serif; }
   body { background: #000; color: #fff; overflow: hidden; }
@@ -417,6 +420,16 @@ function closeMiniProfile(e) {
 }
 
 document.addEventListener("DOMContentLoaded", renderComments);
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
 </script>
 </body>
 </html>

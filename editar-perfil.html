@@ -6,6 +6,9 @@
 <title>Editar Perfil - Hikari Play</title>
 <link href="css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/Logo.png">
+<meta name="theme-color" content="#0b0c10">
 <style>
   body {
     background: #0b0c10;
@@ -982,6 +985,16 @@ function executeAccountDeletion() {
 
   window.location.href = "index.html";
 }
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/hikari-play/sw.js')
+        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+        .catch((err) => console.log('Error al registrar el Service Worker:', err));
+    });
+  }
 </script>
 </body>
 </html>
