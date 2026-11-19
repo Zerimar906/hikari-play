@@ -47,6 +47,13 @@
     margin-top: 10px;
   }
   .login-title span { color: #4079ff; }
+  .reset-subtitle {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #9ba3b4;
+    margin-top: -15px;
+    margin-bottom: 20px;
+  }
   
   .form-group { margin-bottom: 16px; }
   .form-group label { display: block; font-size: 0.85rem; color: #7d8597; margin-bottom: 6px; font-weight: bold; }
@@ -180,69 +187,111 @@
   
   <div class="login-title">Hikari<span>Play</span></div>
 
-  <form id="authForm">
-    <div class="form-group" id="usernameGroup" style="display:none;">
-      <label>Nombre de Usuario Único (@user)</label>
-      <input type="text" id="regUsername" placeholder="ej: adalberto01">
-      <div id="usernameTakenError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
-    </div>
-
-    <div class="form-group">
-      <label>Correo electrónico</label>
-      <input type="email" id="email" required placeholder="tu@correo.com">
-      <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
-      <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
-      <div id="resetInfoMsg" class="info-msg"></div>
-    </div>
-    
-    <div class="form-group">
-      <label>Contraseña</label>
-      <div class="password-wrapper">
-        <input type="password" id="password" required placeholder="••••••••">
-        <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" onclick="togglePasswordVisibility()" title="Mostrar u ocultar contraseña">
-          <i class="fas fa-eye" id="passwordEyeIcon"></i>
-        </button>
+  <!-- VISTA PRINCIPAL -->
+  <div id="loginSection">
+    <form id="authForm">
+      <div class="form-group" id="usernameGroup" style="display:none;">
+        <label>Nombre de Usuario Único (@user)</label>
+        <input type="text" id="regUsername" placeholder="ej: adalberto01">
+        <div id="usernameTakenError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
       </div>
+
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="email" required placeholder="tu@correo.com">
+        <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
+        <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
+        <div id="resetInfoMsg" class="info-msg"></div>
+      </div>
+      
+      <div class="form-group">
+        <label>Contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" required placeholder="••••••••">
+          <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" onclick="togglePasswordVisibility('password', 'passwordEyeIcon')" title="Mostrar u ocultar contraseña">
+            <i class="fas fa-eye" id="passwordEyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-submit">Ingresar</button>
+    </form>
+
+    <div class="extra-links">
+      <a href="#" id="toggleModeBtn" onclick="toggleMode(event)">¿No tienes cuenta? Regístrate</a>
+      <a href="#" id="forgotPassBtn" onclick="handleForgotPassword(event)">¿Olvidaste tu contraseña?</a>
     </div>
 
-    <button type="submit" id="submitBtn" class="btn-submit">Ingresar</button>
-  </form>
+    <div class="divider">o conéctate con</div>
 
-  <div class="extra-links">
-    <a href="#" id="toggleModeBtn" onclick="toggleMode(event)">¿No tienes cuenta? Regístrate</a>
-    <a href="#" id="forgotPassBtn" onclick="handleForgotPassword(event)">¿Olvidaste tu contraseña?</a>
-  </div>
+    <div class="oauth-providers">
+      <button type="button" onclick="redirectToOfficialOAuth('Google')" class="btn-oauth btn-google">
+        <i class="fab fa-google"></i> Continuar con Google
+      </button>
+      <button type="button" onclick="redirectToOfficialOAuth('Discord')" class="btn-oauth btn-discord">
+        <i class="fab fa-discord"></i> Continuar con Discord
+      </button>
+      <button type="button" onclick="redirectToOfficialOAuth('GitHub')" class="btn-oauth btn-github">
+        <i class="fab fa-github"></i> Continuar con GitHub
+      </button>
+    </div>
 
-  <div class="divider">o conéctate con</div>
-
-  <div class="oauth-providers">
-    <button type="button" onclick="redirectToOfficialOAuth('Google')" class="btn-oauth btn-google">
-      <i class="fab fa-google"></i> Continuar con Google
-    </button>
-    <button type="button" onclick="redirectToOfficialOAuth('Discord')" class="btn-oauth btn-discord">
-      <i class="fab fa-discord"></i> Continuar con Discord
-    </button>
-    <button type="button" onclick="redirectToOfficialOAuth('GitHub')" class="btn-oauth btn-github">
-      <i class="fab fa-github"></i> Continuar con GitHub
+    <button type="button" class="btn-dev-clear" onclick="clearAllRegisteredAccounts()">
+      <i class="fas fa-trash"></i> Borrar todas las cuentas registradas
     </button>
   </div>
 
-  <button type="button" class="btn-dev-clear" onclick="clearAllRegisteredAccounts()">
-    <i class="fas fa-trash"></i> Borrar todas las cuentas registradas
-  </button>
+  <!-- VISTA DE RESTABLECER CONTRASEÑA (DESDE EL ENLACE DEL CORREO) -->
+  <div id="resetPasswordSection" style="display:none;">
+    <div class="reset-subtitle">Restablecer contraseña</div>
+    <form id="resetPasswordForm">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="resetEmailInput" required placeholder="tu@correo.com">
+        <div id="resetEmailNotFoundError" class="error-msg">Este correo no coincide con el enlace o no está registrado.</div>
+      </div>
+
+      <div class="form-group">
+        <label>Nueva contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="newPasswordInput" required minlength="6" placeholder="Mínimo 6 caracteres">
+          <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('newPasswordInput', 'newPassEyeIcon')" title="Mostrar u ocultar contraseña">
+            <i class="fas fa-eye" id="newPassEyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirmar nueva contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="confirmNewPasswordInput" required minlength="6" placeholder="Repite tu contraseña">
+          <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('confirmNewPasswordInput', 'confirmPassEyeIcon')" title="Mostrar u ocultar contraseña">
+            <i class="fas fa-eye" id="confirmPassEyeIcon"></i>
+          </button>
+        </div>
+        <div id="passwordMismatchError" class="error-msg">Las contraseñas no coinciden.</div>
+      </div>
+
+      <button type="submit" class="btn-submit">Guardar nueva contraseña</button>
+    </form>
+
+    <div class="extra-links" style="justify-content:center;">
+      <a href="#" onclick="exitResetView(event)">Volver a iniciar sesión</a>
+    </div>
+  </div>
 </div>
 
 <script>
 const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html";
 
-// CONFIGURACIÓN DE EMAILJS (REEMPLAZA ESTOS 3 VALORES CON LOS TUYOS)
+// PON AQUÍ EL TEMPLATE ID REAL DE TU PLANTILLA EN EMAILJS (no el serviceId)
 const EMAILJS_CONFIG = {
   publicKey: "FS0bgMDeemgaOliNd",
-  serviceId: "service_qar8cgj",
-  templateId: "service_4is8eij"
+  serviceId: "service_4is8eij",
+  templateId: "TU_TEMPLATE_ID_REAL"
 };
 
-if (window.emailjs && EMAILJS_CONFIG.publicKey !== "TU_EMAILJS_PUBLIC_KEY") {
+if (window.emailjs && EMAILJS_CONFIG.publicKey && !EMAILJS_CONFIG.publicKey.startsWith("TU_")) {
   emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
 }
 
@@ -269,14 +318,22 @@ const OAUTH_CONFIG = {
 
 let isRegistering = false;
 
-function togglePasswordVisibility() {
-  const passInput = document.getElementById("password");
-  const eyeIcon = document.getElementById("passwordEyeIcon");
+function togglePasswordVisibility(inputId, iconId) {
+  const passInput = document.getElementById(inputId);
+  const eyeIcon = document.getElementById(iconId);
   const isHidden = passInput.type === "password";
 
   passInput.type = isHidden ? "text" : "password";
   eyeIcon.classList.toggle("fa-eye", !isHidden);
   eyeIcon.classList.toggle("fa-eye-slash", isHidden);
+}
+
+function exitResetView(e) {
+  if (e) e.preventDefault();
+  window.history.replaceState({}, document.title, window.location.pathname);
+  document.getElementById("resetPasswordSection").style.display = "none";
+  document.getElementById("loginSection").style.display = "block";
+  clearErrors();
 }
 
 async function handleForgotPassword(e) {
@@ -290,7 +347,7 @@ async function handleForgotPassword(e) {
 
   if (!emailInput) {
     emailField.focus();
-    alert("Escribe primero tu correo electrónico en el campo de correo para enviar el código.");
+    alert("Escribe primero tu correo electrónico en el campo de correo para enviar el enlace.");
     return;
   }
 
@@ -303,17 +360,21 @@ async function handleForgotPassword(e) {
 
   if (
     !window.emailjs ||
-    EMAILJS_CONFIG.publicKey === "FS0bgMDeemgaOliNd" ||
-    EMAILJS_CONFIG.serviceId === "service_4is8eij" ||
-    EMAILJS_CONFIG.templateId === "service_4is8eij"
+    !EMAILJS_CONFIG.publicKey || EMAILJS_CONFIG.publicKey.startsWith("TU_") ||
+    !EMAILJS_CONFIG.serviceId || EMAILJS_CONFIG.serviceId.startsWith("TU_") ||
+    !EMAILJS_CONFIG.templateId || EMAILJS_CONFIG.templateId.startsWith("TU_")
   ) {
     alert("Configura primero tu Public Key, Service ID y Template ID de EmailJS en EMAILJS_CONFIG.");
     return;
   }
 
-  const recoveryCode = String(Math.floor(100000 + Math.random() * 900000));
+  const resetToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+  localStorage.setItem("hikariPendingReset_" + emailInput, resetToken);
+
+  const recoveryLink = `${GITHUB_REDIRECT_URI}?reset=1&email=${encodeURIComponent(emailInput)}&token=${encodeURIComponent(resetToken)}`;
+
   const originalBtnText = forgotBtn.textContent;
-  forgotBtn.textContent = "Enviando correo...";
+  forgotBtn.textContent = "Enviando enlace...";
   forgotBtn.style.pointerEvents = "none";
 
   try {
@@ -321,43 +382,55 @@ async function handleForgotPassword(e) {
       to_email: emailInput,
       email: emailInput,
       username: usersDb[emailInput].username || emailInput,
-      recovery_code: recoveryCode,
+      recovery_link: recoveryLink,
       app_name: "Hikari Play"
     });
 
-    resetMsg.textContent = "Correo enviado. Revisa tu bandeja de entrada o spam.";
-    resetMsg.style.display = "block";
-
-    const enteredCode = prompt(
-      `Se envió un código de recuperación a ${emailInput} vía EmailJS. Escríbelo aquí:`
-    );
-
-    if (enteredCode === null) return;
-
-    if (enteredCode.trim() !== recoveryCode) {
-      alert("El código ingresado no coincide con el enviado a tu correo.");
-      return;
-    }
-
-    const newPassword = prompt("Escribe tu nueva contraseña (mínimo 6 caracteres):");
-    if (!newPassword || newPassword.length < 6) {
-      alert("La contraseña debe tener al menos 6 caracteres.");
-      return;
-    }
-
-    usersDb[emailInput].password = newPassword;
-    localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
-
-    resetMsg.textContent = "Contraseña actualizada correctamente. Ya puedes iniciar sesión.";
+    resetMsg.textContent = "Enlace enviado. Revisa tu bandeja de entrada o spam y abre el enlace.";
     resetMsg.style.display = "block";
   } catch (err) {
     console.error("Error enviando correo con EmailJS:", err);
-    alert("No se pudo enviar el correo con EmailJS. Revisa tu Service ID, Template ID, Public Key y variables de la plantilla.");
+    alert("No se pudo enviar el correo con EmailJS. Revisa tu Template ID y las variables de la plantilla.");
   } finally {
     forgotBtn.textContent = originalBtnText;
     forgotBtn.style.pointerEvents = "auto";
   }
 }
+
+document.getElementById("resetPasswordForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  clearErrors();
+
+  const emailVal = document.getElementById("resetEmailInput").value.trim().toLowerCase();
+  const newPass = document.getElementById("newPasswordInput").value;
+  const confirmPass = document.getElementById("confirmNewPasswordInput").value;
+  const urlParams = new URLSearchParams(window.location.search);
+  const linkEmail = (urlParams.get("email") || "").trim().toLowerCase();
+  const linkToken = urlParams.get("token") || "";
+
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const savedToken = localStorage.getItem("hikariPendingReset_" + emailVal);
+
+  if (!usersDb[emailVal] || (linkEmail && emailVal !== linkEmail) || !savedToken || savedToken !== linkToken) {
+    document.getElementById("resetEmailNotFoundError").style.display = "block";
+    return;
+  }
+
+  if (newPass !== confirmPass) {
+    document.getElementById("passwordMismatchError").style.display = "block";
+    return;
+  }
+
+  usersDb[emailVal].password = newPass;
+  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+  localStorage.removeItem("hikariPendingReset_" + emailVal);
+
+  exitResetView();
+  document.getElementById("email").value = emailVal;
+  const resetMsg = document.getElementById("resetInfoMsg");
+  resetMsg.textContent = "Contraseña actualizada. Ya puedes iniciar sesión.";
+  resetMsg.style.display = "block";
+});
 
 function clearErrors() {
   document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
@@ -400,6 +473,18 @@ function redirectToOfficialOAuth(provider) {
 window.addEventListener("DOMContentLoaded", async () => {
   const hash = window.location.hash;
   const search = window.location.search;
+  const urlParams = new URLSearchParams(search);
+
+  if (urlParams.get("reset") === "1") {
+    const emailFromLink = urlParams.get("email") || "";
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("resetPasswordSection").style.display = "block";
+    if (emailFromLink) {
+      document.getElementById("resetEmailInput").value = emailFromLink;
+    }
+    return;
+  }
+
   const pendingProvider = sessionStorage.getItem("pendingOAuthProvider");
 
   if (pendingProvider && (hash.includes("access_token=") || search.includes("code="))) {
