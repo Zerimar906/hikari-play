@@ -239,7 +239,7 @@ const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html
 const EMAILJS_CONFIG = {
   publicKey: "FS0bgMDeemgaOliNd",
   serviceId: "service_4is8eij",
-  templateId: "service_4is8eij"
+  templateId: "template_r7xv0gl"
 };
 
 if (window.emailjs && EMAILJS_CONFIG.publicKey !== "TU_EMAILJS_PUBLIC_KEY") {
@@ -303,9 +303,9 @@ async function handleForgotPassword(e) {
 
   if (
     !window.emailjs ||
-    EMAILJS_CONFIG.publicKey === "FS0bgMDeemgaOliNd" ||
-    EMAILJS_CONFIG.serviceId === "service_4is8eij" ||
-    EMAILJS_CONFIG.templateId === "service_4is8eij"
+    EMAILJS_CONFIG.publicKey === "TU_EMAILJS_PUBLIC_KEY" ||
+    EMAILJS_CONFIG.serviceId === "TU_EMAILJS_SERVICE_ID" ||
+    EMAILJS_CONFIG.templateId === "TU_EMAILJS_TEMPLATE_ID"
   ) {
     alert("Configura primero tu Public Key, Service ID y Template ID de EmailJS en EMAILJS_CONFIG.");
     return;
