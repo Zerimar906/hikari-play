@@ -1,172 +1,66 @@
 <!DOCTYPE html>
-<html dir='ltr' lang='es'>
+<html dir='ltr' lang='es' translate='no'>
 <head>
 <meta charset='UTF-8' />
 <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-<title>Editar Perfil - Hikari Play</title>
+<title>Acceso - Hikari Play</title>
 <link href="css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   body {
     background: #0b0c10;
     color: #fff;
     font-family: 'PT Sans', sans-serif;
-    margin: 0;
-    padding: 20px;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     min-height: 100vh;
+    margin: 0;
   }
-
-  /* Misma estética de tarjeta que perfil.html */
-  .social-card {
+  .login-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     background: #15171e;
+    padding: 30px;
     border-radius: 16px;
-    overflow: hidden;
-    position: relative;
     box-shadow: 0 12px 35px rgba(0,0,0,0.7);
     border: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    box-sizing: border-box;
   }
-
-  .btn-back {
+  .btn-back-absolute {
     position: absolute;
     top: 15px;
     left: 15px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(11, 12, 16, 0.7);
-    backdrop-filter: blur(6px);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    z-index: 10;
-    transition: background 0.2s;
-  }
-  .btn-back:hover { background: #4079ff; }
-
-  .btn-top-banner {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 7px 14px;
-    border-radius: 20px;
-    background: rgba(11, 12, 16, 0.7);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-    transition: background 0.2s;
-  }
-  .btn-top-banner:hover { background: #4079ff; }
-
-  .card-banner {
-    width: 100%;
-    height: 140px;
-    background: linear-gradient(135deg, #1f2833 0%, #4079ff 100%);
-    background-size: cover;
-    background-position: center;
-    position: relative;
-  }
-  .card-banner::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(to top, #15171e, transparent);
-  }
-
-  .card-content {
-    padding: 0 20px 25px 20px;
-    position: relative;
-    margin-top: -45px;
-  }
-
-  .avatar-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 18px;
-  }
-
-  .avatar-box {
-    position: relative;
-    width: 86px;
-    height: 86px;
-  }
-  .avatar-img {
-    width: 86px;
-    height: 86px;
-    border-radius: 20px;
-    object-fit: cover;
-    border: 3px solid #15171e;
-    background: #0b0c10;
-  }
-  .avatar-cam-badge {
-    position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: #4079ff;
-    color: #fff;
-    border: 2px solid #15171e;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    cursor: pointer;
-  }
-
-  .section-box {
-    background: #1f232e;
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 14px;
-  }
-
-  .section-label {
-    font-size: 0.75rem;
     color: #7d8597;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .btn-back-absolute:hover { color: #fff; }
+  .login-title {
+    text-align: center;
+    font-size: 1.8rem;
     font-weight: bold;
+    margin-bottom: 25px;
+    margin-top: 10px;
   }
-
-  .field-group { margin-bottom: 12px; }
-  .field-group:last-child { margin-bottom: 0; }
-  .field-group label {
-    display: block;
-    font-size: 0.8rem;
-    color: #a0a8b8;
-    margin-bottom: 5px;
-  }
-
-  .clean-input {
+  .login-title span { color: #4079ff; }
+  
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.85rem; color: #7d8597; margin-bottom: 6px; font-weight: bold; }
+  .form-group input {
     width: 100%;
-    padding: 10px 12px;
-    background: #15171e;
+    padding: 11px 14px;
+    background: #1f232e;
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
+    border-radius: 10px;
     color: #fff;
-    font-size: 0.9rem;
     box-sizing: border-box;
-    outline: none;
-    transition: border-color 0.2s;
+    font-size: 0.95rem;
   }
-  .clean-input:focus { border-color: #4079ff; }
+  .form-group input:focus { border-color: #4079ff; outline: none; }
 
   .password-wrapper {
     position: relative;
@@ -174,158 +68,27 @@
     align-items: center;
   }
   .password-wrapper input {
-    padding-right: 40px;
+    padding-right: 42px;
   }
   .btn-toggle-pass {
     position: absolute;
-    right: 10px;
+    right: 12px;
     background: none;
     border: none;
     color: #7d8597;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     padding: 4px;
     transition: color 0.2s;
   }
-  .btn-toggle-pass:hover { color: #fff; }
-
-  .security-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .btn-security {
-    flex: 1;
-    min-width: 135px;
-    padding: 9px 12px;
-    background: #15171e;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
+  .btn-toggle-pass:hover {
     color: #fff;
-    font-size: 0.82rem;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: background 0.2s, border-color 0.2s;
   }
-  .btn-security:hover {
-    background: #252a38;
-    border-color: #4079ff;
-  }
-  .security-subpanel {
-    display: none;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.07);
-  }
-  .btn-sec-action {
-    width: 100%;
-    padding: 9px;
-    background: #4079ff;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 0.85rem;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: background 0.2s;
-  }
-  .btn-sec-action:hover { background: #3060d0; }
-  .success-msg {
-    color: #30d158;
-    font-size: 0.78rem;
-    margin-top: 6px;
-    display: none;
-    font-weight: bold;
-  }
-
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-    font-size: 0.82rem;
-    color: #7d8597;
-  }
-
-  /* Desplegable de gustos limpio */
-  .dropdown-wrapper {
-    position: relative;
-  }
-  .dropdown-trigger {
-    width: 100%;
-    padding: 10px 12px;
-    background: #15171e;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.88rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    box-sizing: border-box;
-  }
-  .dropdown-menu {
-    display: none;
-    background: #15171e;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    margin-top: 6px;
-    max-height: 165px;
-    overflow-y: auto;
-    padding: 6px;
-  }
-  .dropdown-menu.open { display: block; }
-  .dropdown-item {
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #c5c6c7;
-  }
-  .dropdown-item:hover { background: rgba(255,255,255,0.05); }
-  .dropdown-item.selected {
-    background: rgba(64, 121, 255, 0.2);
-    color: #6ea0ff;
-    font-weight: bold;
-  }
-
-  .selected-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .tag-pill {
-    background: rgba(64, 121, 255, 0.15);
-    color: #6ea0ff;
-    border: 1px solid rgba(64, 121, 255, 0.3);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .tag-pill i { cursor: pointer; }
-
-  .error-msg {
-    color: #ff453a;
-    font-size: 0.78rem;
-    margin-top: 5px;
-    display: none;
-  }
-
-  .btn-save {
+  
+  .error-msg { color: #ff453a; font-size: 0.82rem; margin-top: 6px; display: none; font-weight: bold; }
+  .info-msg { color: #30d158; font-size: 0.82rem; margin-top: 8px; display: none; font-weight: bold; }
+  
+  .btn-submit {
     width: 100%;
     padding: 12px;
     background: #4079ff;
@@ -333,602 +96,504 @@
     border-radius: 10px;
     color: #fff;
     font-weight: bold;
-    font-size: 0.95rem;
     cursor: pointer;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin-top: 10px;
     transition: background 0.2s;
   }
-  .btn-save:hover { background: #3060d0; }
+  .btn-submit:hover { background: #3060d0; }
 
-  .btn-delete-account {
-    width: 100%;
-    padding: 11px;
-    background: rgba(255, 59, 48, 0.12);
-    color: #ff453a;
-    border: 1px solid rgba(255, 59, 48, 0.3);
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-delete-account:hover { background: rgba(255, 59, 48, 0.25); }
-
-  /* Ventana Flotante (Modal) de Confirmación de Eliminación */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 20px;
-  }
-  .modal-overlay.show { display: flex; }
-
-  .modal-box {
-    width: 100%;
-    max-width: 360px;
-    background: #15171e;
-    border: 1px solid rgba(255, 59, 48, 0.35);
-    border-radius: 16px;
-    padding: 22px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.85);
-  }
-  .modal-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: rgba(255, 59, 48, 0.15);
-    color: #ff453a;
+  .extra-links {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    margin: 0 auto 12px auto;
-  }
-  .modal-title {
-    font-size: 1.15rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  .modal-desc {
+    justify-content: space-between;
     font-size: 0.85rem;
-    color: #a0a8b8;
-    line-height: 1.4;
-    margin-bottom: 16px;
+    margin-top: 18px;
   }
-  .modal-actions {
+  .extra-links a { color: #6ea0ff; text-decoration: none; }
+  .extra-links a:hover { text-decoration: underline; }
+
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    color: #7d8597;
+    font-size: 0.85rem;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 32%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  .oauth-providers {
     display: flex;
+    flex-direction: column;
     gap: 10px;
-    margin-top: 14px;
   }
-  .btn-modal-cancel {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
+  .btn-oauth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 11px;
+    border-radius: 10px;
     border: none;
-    background: #1f232e;
     color: #fff;
     font-weight: bold;
     cursor: pointer;
-  }
-  .btn-modal-confirm {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    background: #ff3b30;
-    color: #fff;
-    font-weight: bold;
-    cursor: pointer;
-    opacity: 0.4;
-    pointer-events: none;
+    text-decoration: none;
+    font-size: 0.9rem;
     transition: opacity 0.2s;
   }
-  .btn-modal-confirm.ready {
-    opacity: 1;
-    pointer-events: auto;
+  .btn-oauth:hover { opacity: 0.85; }
+  .btn-google { background: #db4437; }
+  .btn-discord { background: #5865f2; }
+  .btn-github { background: #24292e; }
+
+  .btn-dev-clear {
+    background: rgba(255, 59, 48, 0.08);
+    border: 1px dashed rgba(255, 59, 48, 0.3);
+    color: #ff453a;
+    font-size: 0.78rem;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 22px;
+    width: 100%;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .btn-dev-clear:hover {
+    background: rgba(255, 59, 48, 0.18);
   }
 </style>
 </head>
 <body>
 
-<div class="social-card">
-  <a href="perfil.html" class="btn-back" title="Volver al perfil"><i class="fas fa-arrow-left"></i></a>
-  <button type="button" class="btn-top-banner" onclick="document.getElementById('bannerFile').click()">
-    <i class="fas fa-image"></i> Fondo
+<div class="login-card">
+  <a href="index.html" class="btn-back-absolute" title="Volver"><i class="fas fa-arrow-left"></i></a>
+  
+  <div class="login-title">Hikari<span>Play</span></div>
+
+  <form id="authForm">
+    <div class="form-group" id="usernameGroup" style="display:none;">
+      <label>Nombre de Usuario Único (@user)</label>
+      <input type="text" id="regUsername" placeholder="ej: adalberto01">
+      <div id="usernameTakenError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Correo electrónico</label>
+      <input type="email" id="email" required placeholder="tu@correo.com">
+      <div id="emailError" class="error-msg">Este correo no existe. Regístrate y vuelve a intentarlo.</div>
+      <div id="emailExistsError" class="error-msg">Este correo ya tiene una cuenta registrada. Inicia sesión.</div>
+      <div id="resetInfoMsg" class="info-msg"></div>
+    </div>
+    
+    <div class="form-group">
+      <label>Contraseña</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" required placeholder="••••••••">
+        <button type="button" class="btn-toggle-pass" id="togglePasswordBtn" onclick="togglePasswordVisibility()" title="Mostrar u ocultar contraseña">
+          <i class="fas fa-eye" id="passwordEyeIcon"></i>
+        </button>
+      </div>
+    </div>
+
+    <button type="submit" id="submitBtn" class="btn-submit">Ingresar</button>
+  </form>
+
+  <div class="extra-links">
+    <a href="#" id="toggleModeBtn" onclick="toggleMode(event)">¿No tienes cuenta? Regístrate</a>
+    <a href="#" id="forgotPassBtn" onclick="handleForgotPassword(event)">¿Olvidaste tu contraseña?</a>
+  </div>
+
+  <div class="divider">o conéctate con</div>
+
+  <div class="oauth-providers">
+    <button type="button" onclick="redirectToOfficialOAuth('Google')" class="btn-oauth btn-google">
+      <i class="fab fa-google"></i> Continuar con Google
+    </button>
+    <button type="button" onclick="redirectToOfficialOAuth('Discord')" class="btn-oauth btn-discord">
+      <i class="fab fa-discord"></i> Continuar con Discord
+    </button>
+    <button type="button" onclick="redirectToOfficialOAuth('GitHub')" class="btn-oauth btn-github">
+      <i class="fab fa-github"></i> Continuar con GitHub
+    </button>
+  </div>
+
+  <button type="button" class="btn-dev-clear" onclick="clearAllRegisteredAccounts()">
+    <i class="fas fa-trash"></i> Borrar todas las cuentas registradas
   </button>
-  <input type="file" id="bannerFile" accept="image/*" style="display:none">
-
-  <div id="editBanner" class="card-banner"></div>
-
-  <div class="card-content">
-    <div class="avatar-row">
-      <div class="avatar-box">
-        <img id="avatarPreview" class="avatar-img" src="img/Logo.png" alt="Avatar">
-        <label for="avatarFile" class="avatar-cam-badge" title="Cambiar foto">
-          <i class="fas fa-camera"></i>
-        </label>
-        <input type="file" id="avatarFile" accept="image/*" style="display:none">
-      </div>
-      <span style="font-size: 0.82rem; color: #7d8597; font-weight: bold;">Configuración de Cuenta</span>
-    </div>
-    <div id="avatarError" class="error-msg" style="margin-bottom:10px;">⚠️ Imagen no válida. No se permiten desnudos explícitos ni partes íntimas.</div>
-
-    <form id="profileForm">
-      <!-- Bloque Identidad -->
-      <div class="section-box">
-        <div class="section-label">Identidad</div>
-
-        <div class="field-group">
-          <label>Nombre de Usuario Único (@user)</label>
-          <input type="text" id="username" class="clean-input" required placeholder="adalberto01">
-          <div id="userError" class="error-msg">Este usuario no es válido, parece que está ocupado. Intenta con otro.</div>
-        </div>
-
-        <div class="field-group">
-          <label>Nombre Visual</label>
-          <input type="text" id="fullname" class="clean-input" required placeholder="Tu Nombre">
-          <div id="nameLockError" class="error-msg">Solo puedes cambiar tu nombre visual cada 7 días.</div>
-        </div>
-
-        <div class="field-group">
-          <label>Edad</label>
-          <input type="number" id="age" class="clean-input" required min="13" max="100">
-          <div class="checkbox-row">
-            <input type="checkbox" id="hideAge">
-            <label for="hideAge" style="margin:0; cursor:pointer;">Ocultar edad en mi perfil público</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bloque Personalización y Desplegable de Gustos -->
-      <div class="section-box">
-        <div class="section-label">Sobre ti y Gustos</div>
-
-        <div class="field-group">
-          <label>Biografía</label>
-          <textarea id="bio" class="clean-input" rows="2" maxlength="140" placeholder="Cuéntanos algo sobre ti..."></textarea>
-          <div id="bioError" class="error-msg">No se permiten palabras obscenas en el perfil.</div>
-        </div>
-
-        <div class="field-group">
-          <label>Intereses y Gustos (Máximo 3)</label>
-          <div class="dropdown-wrapper">
-            <div class="dropdown-trigger" onclick="toggleDropdown()">
-              <span id="dropdownLabel">Seleccionar gustos...</span>
-              <i class="fas fa-chevron-down" style="font-size:0.75rem; color:#7d8597;"></i>
-            </div>
-            <div id="likesDropdown" class="dropdown-menu"></div>
-          </div>
-          <div id="selectedPills" class="selected-pills"></div>
-          <div id="tagsError" class="error-msg">Solo puedes elegir un máximo de 3 gustos.</div>
-        </div>
-      </div>
-
-      <!-- Bloque Seguridad de Cuenta: Cambiar Correo y Contraseña -->
-      <div class="section-box">
-        <div class="section-label">Seguridad de Cuenta</div>
-        <div class="security-buttons">
-          <button type="button" class="btn-security" onclick="toggleSecurityPanel('changeEmailPanel')">
-            <i class="fas fa-envelope"></i> Cambiar correo
-          </button>
-          <button type="button" class="btn-security" onclick="toggleSecurityPanel('changePasswordPanel')">
-            <i class="fas fa-key"></i> Cambiar contraseña
-          </button>
-        </div>
-
-        <!-- Subpanel Cambiar Correo -->
-        <div id="changeEmailPanel" class="security-subpanel">
-          <div class="field-group">
-            <label>Nuevo correo electrónico</label>
-            <input type="email" id="newEmailInput" class="clean-input" placeholder="nuevo@correo.com">
-            <div id="newEmailError" class="error-msg"></div>
-            <div id="newEmailSuccess" class="success-msg">Correo actualizado correctamente.</div>
-          </div>
-          <button type="button" class="btn-sec-action" onclick="handleChangeEmail()">Guardar nuevo correo</button>
-        </div>
-
-        <!-- Subpanel Cambiar Contraseña -->
-        <div id="changePasswordPanel" class="security-subpanel">
-          <div class="field-group">
-            <label>Nueva contraseña</label>
-            <div class="password-wrapper">
-              <input type="password" id="newPasswordInput" class="clean-input" placeholder="Mínimo 6 caracteres">
-              <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('newPasswordInput', 'newPassEye')" title="Mostrar u ocultar contraseña">
-                <i class="fas fa-eye" id="newPassEye"></i>
-              </button>
-            </div>
-          </div>
-          <div class="field-group">
-            <label>Confirmar nueva contraseña</label>
-            <div class="password-wrapper">
-              <input type="password" id="confirmPasswordInput" class="clean-input" placeholder="Repite la contraseña">
-              <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('confirmPasswordInput', 'confirmPassEye')" title="Mostrar u ocultar contraseña">
-                <i class="fas fa-eye" id="confirmPassEye"></i>
-              </button>
-            </div>
-            <div id="newPasswordError" class="error-msg"></div>
-            <div id="newPasswordSuccess" class="success-msg">Contraseña actualizada correctamente.</div>
-          </div>
-          <button type="button" class="btn-sec-action" onclick="handleChangePassword()">Guardar nueva contraseña</button>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-save">Guardar Cambios</button>
-      <button type="button" class="btn-delete-account" onclick="openDeleteModal()">
-        <i class="fas fa-trash-alt"></i> Eliminar cuenta
-      </button>
-    </form>
-  </div>
-</div>
-
-<!-- Ventana Flotante de Confirmación para Eliminar Cuenta -->
-<div id="deleteModal" class="modal-overlay" onclick="closeDeleteModal(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
-    <div class="modal-title">¿Estás seguro de eliminar esta cuenta?</div>
-    <div class="modal-desc">
-      Si eliminas esta cuenta se borrará todo registro de ella de forma permanente. Para confirmar, escribe <strong>CONFIRMAR</strong> abajo:
-    </div>
-    <input type="text" id="confirmDeleteInput" class="clean-input" placeholder="Escribe CONFIRMAR" autocomplete="off" oninput="checkConfirmText()">
-    <div class="modal-actions">
-      <button type="button" class="btn-modal-cancel" onclick="document.getElementById('deleteModal').classList.remove('show')">Cancelar</button>
-      <button type="button" id="btnConfirmDelete" class="btn-modal-confirm" onclick="executeAccountDeletion()">Eliminar</button>
-    </div>
-  </div>
 </div>
 
 <script>
-const availableTags = [
-  "Anime", "Dramas", "Música", "Arte", 
-  "Comer chocolate", "Videojuegos", "Tecnología", 
-  "Lectura", "Deportes", "Cosplay", "Manga"
-];
+const GITHUB_REDIRECT_URI = "https://zerimar906.github.io/hikari-play/login.html";
 
-const badWords = ["groseria", "obsceno", "nsfw", "puto", "puta", "mierda"];
+// CONFIGURACIÓN DE EMAILJS (REEMPLAZA ESTOS 3 VALORES CON LOS TUYOS)
+const EMAILJS_CONFIG = {
+  publicKey: "FS0bgMDeemgaOliNd",
+  serviceId: "service_qar8cgj",
+  templateId: "service_4is8eij"
+};
 
-let selectedTags = JSON.parse(localStorage.getItem("hikariLikes") || "[]");
-let base64Avatar = localStorage.getItem("hikariAvatar") || "";
-let base64Banner = localStorage.getItem("hikariBanner") || "";
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("hikariUserLoggedIn") !== "true") {
-    window.location.href = "login.html";
-    return;
-  }
-
-  document.getElementById("username").value = localStorage.getItem("hikariUsername") || "";
-  document.getElementById("fullname").value = localStorage.getItem("hikariFullname") || "";
-  document.getElementById("age").value = localStorage.getItem("hikariAge") || "";
-  document.getElementById("hideAge").checked = localStorage.getItem("hikariHideAge") === "true";
-  document.getElementById("bio").value = localStorage.getItem("hikariBio") || "";
-
-  if (base64Avatar) document.getElementById("avatarPreview").src = base64Avatar;
-  if (base64Banner) document.getElementById("editBanner").style.backgroundImage = `url(${base64Banner})`;
-
-  renderDropdown();
-  renderPills();
-});
-
-function toggleSecurityPanel(panelId) {
-  ["changeEmailPanel", "changePasswordPanel"].forEach(id => {
-    const panel = document.getElementById(id);
-    panel.style.display = (id === panelId && panel.style.display !== "block") ? "block" : "none";
-  });
-  ["newEmailError", "newEmailSuccess", "newPasswordError", "newPasswordSuccess"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = "none";
-  });
+if (window.emailjs && EMAILJS_CONFIG.publicKey !== "TU_EMAILJS_PUBLIC_KEY") {
+  emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
 }
 
-function togglePasswordVisibility(inputId, iconId) {
-  const input = document.getElementById(inputId);
-  const icon = document.getElementById(iconId);
-  const show = input.type === "password";
-  input.type = show ? "text" : "password";
-  icon.classList.toggle("fa-eye", !show);
-  icon.classList.toggle("fa-eye-slash", show);
+const OAUTH_CONFIG = {
+  Google: {
+    clientId: "423629295215-oa4fno446h78cm90npn4031dnqa3ernc.apps.googleusercontent.com",
+    authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    scope: "email profile",
+    responseType: "token"
+  },
+  Discord: {
+    clientId: "1570716113753608293",
+    authUrl: "https://discord.com/api/oauth2/authorize",
+    scope: "identify email",
+    responseType: "token"
+  },
+  GitHub: {
+    clientId: "Ov23li71mySA9Id9XLPs",
+    authUrl: "https://github.com/login/oauth/authorize",
+    scope: "user:email",
+    responseType: "code"
+  }
+};
+
+let isRegistering = false;
+
+function togglePasswordVisibility() {
+  const passInput = document.getElementById("password");
+  const eyeIcon = document.getElementById("passwordEyeIcon");
+  const isHidden = passInput.type === "password";
+
+  passInput.type = isHidden ? "text" : "password";
+  eyeIcon.classList.toggle("fa-eye", !isHidden);
+  eyeIcon.classList.toggle("fa-eye-slash", isHidden);
 }
 
-function findCurrentUserEmailKey(usersDb) {
-  const currentEmail = (localStorage.getItem("hikariCurrentEmail") || "").toLowerCase();
-  if (currentEmail && usersDb[currentEmail]) return currentEmail;
-
-  const currentUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
-  for (let emailKey in usersDb) {
-    if ((usersDb[emailKey].username || "").toLowerCase() === currentUsername) {
-      return emailKey;
-    }
-  }
-  return "";
-}
-
-function handleChangeEmail() {
-  const input = document.getElementById("newEmailInput");
-  const errEl = document.getElementById("newEmailError");
-  const okEl = document.getElementById("newEmailSuccess");
-  errEl.style.display = "none";
-  okEl.style.display = "none";
-
-  const newEmail = input.value.trim().toLowerCase();
-  if (!newEmail || !newEmail.includes("@")) {
-    errEl.textContent = "Escribe un correo electrónico válido.";
-    errEl.style.display = "block";
-    return;
-  }
-
-  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
-  const oldEmailKey = findCurrentUserEmailKey(usersDb);
-
-  if (newEmail !== oldEmailKey && usersDb[newEmail]) {
-    errEl.textContent = "Ese correo ya está registrado en otra cuenta.";
-    errEl.style.display = "block";
-    return;
-  }
-
-  const existingRecord = oldEmailKey ? usersDb[oldEmailKey] : {
-    username: (localStorage.getItem("hikariUsername") || "usuario").toLowerCase(),
-    fullname: localStorage.getItem("hikariFullname") || "Usuario",
-    joinDate: localStorage.getItem("hikariJoinDate") || new Date().toLocaleDateString("es-ES", { month: "long", year: "numeric" })
-  };
-
-  existingRecord.email = newEmail;
-  usersDb[newEmail] = existingRecord;
-  if (oldEmailKey && oldEmailKey !== newEmail) {
-    delete usersDb[oldEmailKey];
-  }
-
-  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
-  localStorage.setItem("hikariCurrentEmail", newEmail);
-  input.value = "";
-  okEl.style.display = "block";
-}
-
-function handleChangePassword() {
-  const pass1 = document.getElementById("newPasswordInput").value;
-  const pass2 = document.getElementById("confirmPasswordInput").value;
-  const errEl = document.getElementById("newPasswordError");
-  const okEl = document.getElementById("newPasswordSuccess");
-  errEl.style.display = "none";
-  okEl.style.display = "none";
-
-  if (pass1.length < 6) {
-    errEl.textContent = "La nueva contraseña debe tener al menos 6 caracteres.";
-    errEl.style.display = "block";
-    return;
-  }
-
-  if (pass1 !== pass2) {
-    errEl.textContent = "Las contraseñas no coinciden.";
-    errEl.style.display = "block";
-    return;
-  }
-
-  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
-  const emailKey = findCurrentUserEmailKey(usersDb);
-
-  if (!emailKey || !usersDb[emailKey]) {
-    errEl.textContent = "No se encontró una cuenta vinculada a esta sesión.";
-    errEl.style.display = "block";
-    return;
-  }
-
-  usersDb[emailKey].password = pass1;
-  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
-  localStorage.setItem("hikariCurrentEmail", emailKey);
-
-  document.getElementById("newPasswordInput").value = "";
-  document.getElementById("confirmPasswordInput").value = "";
-  okEl.style.display = "block";
-}
-
-// Control del menú desplegable de gustos
-function toggleDropdown() {
-  document.getElementById("likesDropdown").classList.toggle("open");
-}
-
-function renderDropdown() {
-  const menu = document.getElementById("likesDropdown");
-  menu.innerHTML = availableTags.map(tag => {
-    const isSelected = selectedTags.includes(tag);
-    return `
-      <div class="dropdown-item ${isSelected ? 'selected' : ''}" onclick="selectTag('${tag}')">
-        <span>${tag}</span>
-        ${isSelected ? '<i class="fas fa-check"></i>' : ''}
-      </div>
-    `;
-  }).join('');
-}
-
-function selectTag(tag) {
-  const error = document.getElementById("tagsError");
-  if (selectedTags.includes(tag)) {
-    selectedTags = selectedTags.filter(t => t !== tag);
-    error.style.display = "none";
-  } else {
-    if (selectedTags.length >= 3) {
-      error.style.display = "block";
-      return;
-    }
-    selectedTags.push(tag);
-    error.style.display = "none";
-  }
-  renderDropdown();
-  renderPills();
-}
-
-function renderPills() {
-  const container = document.getElementById("selectedPills");
-  const label = document.getElementById("dropdownLabel");
-  
-  label.textContent = selectedTags.length > 0 
-    ? `${selectedTags.length}/3 seleccionados` 
-    : "Seleccionar gustos...";
-
-  container.innerHTML = selectedTags.map(tag => `
-    <span class="tag-pill">${tag} <i class="fas fa-times" onclick="selectTag('${tag}')"></i></span>
-  `).join('');
-}
-
-// Carga de imágenes
-document.getElementById("avatarFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      base64Avatar = ev.target.result;
-      document.getElementById("avatarPreview").src = base64Avatar;
-      document.getElementById("avatarError").style.display = "none";
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-document.getElementById("bannerFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      base64Banner = ev.target.result;
-      document.getElementById("editBanner").style.backgroundImage = `url(${base64Banner})`;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Guardar Cambios y actualizar base de datos persistente
-document.getElementById("profileForm").addEventListener("submit", (e) => {
+async function handleForgotPassword(e) {
   e.preventDefault();
-  document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
+  clearErrors();
 
-  const newUsername = document.getElementById("username").value.trim().toLowerCase();
-  const oldUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
-  const newFullname = document.getElementById("fullname").value.trim();
-  const oldFullname = localStorage.getItem("hikariFullname");
-  const bioText = document.getElementById("bio").value;
+  const emailField = document.getElementById("email");
+  const resetMsg = document.getElementById("resetInfoMsg");
+  const forgotBtn = document.getElementById("forgotPassBtn");
+  const emailInput = emailField.value.trim().toLowerCase();
 
-  // 1. Validar obscenidades
-  const fullCheck = (newUsername + " " + newFullname + " " + bioText).toLowerCase();
-  if (badWords.some(w => fullCheck.includes(w))) {
-    document.getElementById("bioError").style.display = "block";
+  if (!emailInput) {
+    emailField.focus();
+    alert("Escribe primero tu correo electrónico en el campo de correo para enviar el código.");
     return;
   }
 
-  // 2. Validar unicidad de @username si cambió
-  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
-  if (newUsername !== oldUsername) {
-    if (usernamesList.includes(newUsername)) {
-      document.getElementById("userError").style.display = "block";
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+
+  if (!usersDb[emailInput]) {
+    document.getElementById("emailError").style.display = "block";
+    return;
+  }
+
+  if (
+    !window.emailjs ||
+    EMAILJS_CONFIG.publicKey === "FS0bgMDeemgaOliNd" ||
+    EMAILJS_CONFIG.serviceId === "service_4is8eij" ||
+    EMAILJS_CONFIG.templateId === "service_4is8eij"
+  ) {
+    alert("Configura primero tu Public Key, Service ID y Template ID de EmailJS en EMAILJS_CONFIG.");
+    return;
+  }
+
+  const recoveryCode = String(Math.floor(100000 + Math.random() * 900000));
+  const originalBtnText = forgotBtn.textContent;
+  forgotBtn.textContent = "Enviando correo...";
+  forgotBtn.style.pointerEvents = "none";
+
+  try {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: emailInput,
+      email: emailInput,
+      username: usersDb[emailInput].username || emailInput,
+      recovery_code: recoveryCode,
+      app_name: "Hikari Play"
+    });
+
+    resetMsg.textContent = "Correo enviado. Revisa tu bandeja de entrada o spam.";
+    resetMsg.style.display = "block";
+
+    const enteredCode = prompt(
+      `Se envió un código de recuperación a ${emailInput} vía EmailJS. Escríbelo aquí:`
+    );
+
+    if (enteredCode === null) return;
+
+    if (enteredCode.trim() !== recoveryCode) {
+      alert("El código ingresado no coincide con el enviado a tu correo.");
       return;
     }
-    usernamesList = usernamesList.filter(u => u !== oldUsername);
-    usernamesList.push(newUsername);
-    localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
-  }
 
-  // 3. Validar regla de 7 días para nombre visual
-  const now = Date.now();
-  const lastChange = parseInt(localStorage.getItem("hikariLastNameChange") || "0");
-  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-  if (oldFullname && oldFullname !== newFullname && (now - lastChange < SEVEN_DAYS)) {
-    document.getElementById("nameLockError").style.display = "block";
-    return;
-  }
-  if (oldFullname !== newFullname) {
-    localStorage.setItem("hikariLastNameChange", now.toString());
-  }
+    const newPassword = prompt("Escribe tu nueva contraseña (mínimo 6 caracteres):");
+    if (!newPassword || newPassword.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
 
-  // Guardar en sesión activa
-  localStorage.setItem("hikariUsername", newUsername);
-  localStorage.setItem("hikariFullname", newFullname);
-  localStorage.setItem("hikariAge", document.getElementById("age").value);
-  localStorage.setItem("hikariHideAge", document.getElementById("hideAge").checked);
-  localStorage.setItem("hikariBio", bioText);
-  localStorage.setItem("hikariLikes", JSON.stringify(selectedTags));
-  if (base64Avatar) localStorage.setItem("hikariAvatar", base64Avatar);
-  if (base64Banner) localStorage.setItem("hikariBanner", base64Banner);
+    usersDb[emailInput].password = newPassword;
+    localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
 
-  // Sincronizar con la base de datos permanente por correo
-  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
-  for (let emailKey in usersDb) {
-    if (usersDb[emailKey].username === oldUsername || usersDb[emailKey].username === newUsername) {
-      usersDb[emailKey] = {
-        ...usersDb[emailKey],
-        username: newUsername,
-        fullname: newFullname,
-        age: document.getElementById("age").value,
-        hideAge: document.getElementById("hideAge").checked,
-        bio: bioText,
-        likes: selectedTags,
-        avatar: base64Avatar,
-        banner: base64Banner
+    resetMsg.textContent = "Contraseña actualizada correctamente. Ya puedes iniciar sesión.";
+    resetMsg.style.display = "block";
+  } catch (err) {
+    console.error("Error enviando correo con EmailJS:", err);
+    alert("No se pudo enviar el correo con EmailJS. Revisa tu Service ID, Template ID, Public Key y variables de la plantilla.");
+  } finally {
+    forgotBtn.textContent = originalBtnText;
+    forgotBtn.style.pointerEvents = "auto";
+  }
+}
+
+function clearErrors() {
+  document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
+  const resetMsg = document.getElementById("resetInfoMsg");
+  if (resetMsg) resetMsg.style.display = "none";
+}
+
+function toggleMode(e) {
+  e.preventDefault();
+  isRegistering = !isRegistering;
+  clearErrors();
+  
+  const userGroup = document.getElementById("usernameGroup");
+  const submitBtn = document.getElementById("submitBtn");
+  const toggleBtn = document.getElementById("toggleModeBtn");
+
+  if (isRegistering) {
+    userGroup.style.display = "block";
+    document.getElementById("regUsername").setAttribute("required", "true");
+    submitBtn.textContent = "Registrarse";
+    toggleBtn.textContent = "¿Ya tienes cuenta? Inicia sesión";
+  } else {
+    userGroup.style.display = "none";
+    document.getElementById("regUsername").removeAttribute("required");
+    submitBtn.textContent = "Ingresar";
+    toggleBtn.textContent = "¿No tienes cuenta? Regístrate";
+  }
+}
+
+function redirectToOfficialOAuth(provider) {
+  const config = OAUTH_CONFIG[provider];
+  sessionStorage.setItem("pendingOAuthProvider", provider);
+  
+  const encodedRedirect = encodeURIComponent(GITHUB_REDIRECT_URI);
+  const targetUrl = `${config.authUrl}?client_id=${config.clientId}&redirect_uri=${encodedRedirect}&response_type=${config.responseType}&scope=${encodeURIComponent(config.scope)}`;
+  
+  window.location.href = targetUrl;
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const hash = window.location.hash;
+  const search = window.location.search;
+  const pendingProvider = sessionStorage.getItem("pendingOAuthProvider");
+
+  if (pendingProvider && (hash.includes("access_token=") || search.includes("code="))) {
+    sessionStorage.removeItem("pendingOAuthProvider");
+    
+    let accessToken = "";
+    if (hash.includes("access_token=")) {
+      const params = new URLSearchParams(hash.substring(1));
+      accessToken = params.get("access_token");
+    }
+
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    let realEmail = "";
+    let realUsername = "";
+    let realFullname = "";
+    let realAvatar = "";
+
+    if (pendingProvider === "Google" && accessToken) {
+      try {
+        const res = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const googleUser = await res.json();
+        
+        if (googleUser && googleUser.email) {
+          realEmail = googleUser.email.toLowerCase();
+          realUsername = googleUser.email.split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "");
+          realFullname = googleUser.name || "Usuario Google";
+          if (googleUser.picture) {
+            realAvatar = googleUser.picture;
+          }
+        }
+      } catch (err) {
+        console.error("Error leyendo perfil de Google:", err);
+      }
+    }
+
+    if (pendingProvider === "Discord" && accessToken) {
+      try {
+        const res = await fetch("https://discord.com/api/users/@me", {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const discordUser = await res.json();
+        
+        if (discordUser && discordUser.id) {
+          realUsername = discordUser.username.toLowerCase().replace(/[^a-z0-9_]/g, "");
+          realEmail = discordUser.email ? discordUser.email.toLowerCase() : `${realUsername}_discord@oauth.local`;
+          realFullname = discordUser.global_name || discordUser.username;
+          if (discordUser.avatar) {
+            realAvatar = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
+          }
+        }
+      } catch (err) {
+        console.error("Error leyendo perfil de Discord:", err);
+      }
+    }
+
+    if (pendingProvider === "GitHub" && search.includes("code=")) {
+      realUsername = "gh_user_" + Math.floor(Math.random() * 9000 + 1000);
+      realEmail = `${realUsername}@github.oauth.local`;
+      realFullname = "Usuario GitHub";
+    }
+
+    if (!realEmail) {
+      realUsername = pendingProvider.toLowerCase() + "_" + Math.floor(Math.random() * 9000 + 1000);
+      realEmail = `${realUsername}@${pendingProvider.toLowerCase()}.oauth`;
+      realFullname = "Usuario " + pendingProvider;
+    }
+
+    let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+    let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariAuthProvider", pendingProvider);
+    localStorage.setItem("hikariCurrentEmail", realEmail);
+
+    if (usersDb[realEmail]) {
+      const existing = usersDb[realEmail];
+      localStorage.setItem("hikariUsername", existing.username);
+      localStorage.setItem("hikariFullname", existing.fullname || realFullname);
+      if (existing.avatar) localStorage.setItem("hikariAvatar", existing.avatar);
+      if (existing.banner) localStorage.setItem("hikariBanner", existing.banner);
+      if (existing.bio) localStorage.setItem("hikariBio", existing.bio);
+      if (existing.age) localStorage.setItem("hikariAge", existing.age);
+      if (existing.likes) localStorage.setItem("hikariLikes", JSON.stringify(existing.likes));
+
+      alert(`Bienvenido de nuevo. Sesión iniciada con ${pendingProvider}.`);
+      window.location.href = "perfil.html";
+    } else {
+      if (usernamesList.includes(realUsername)) {
+        realUsername = realUsername + "_" + Math.floor(Math.random() * 999);
+      }
+
+      const joinDate = new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+      usersDb[realEmail] = {
+        email: realEmail,
+        username: realUsername,
+        fullname: realFullname,
+        avatar: realAvatar,
+        provider: pendingProvider,
+        joinDate: joinDate
       };
-      break;
+
+      usernamesList.push(realUsername);
+      localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+      localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+      localStorage.setItem("hikariUsername", realUsername);
+      localStorage.setItem("hikariFullname", realFullname);
+      if (realAvatar) localStorage.setItem("hikariAvatar", realAvatar);
+      localStorage.setItem("hikariJoinDate", joinDate);
+
+      alert(`Cuenta vinculada con ${pendingProvider}. Completa tu perfil para terminar.`);
+      window.location.href = "editar-perfil.html";
     }
   }
-  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
-
-  window.location.href = "perfil.html";
 });
 
-// Lógica de Ventana Flotante para Eliminar Cuenta
-function openDeleteModal() {
-  document.getElementById("confirmDeleteInput").value = "";
-  document.getElementById("btnConfirmDelete").classList.remove("ready");
-  document.getElementById("deleteModal").classList.add("show");
-}
+document.getElementById("authForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  clearErrors();
 
-function closeDeleteModal(e) {
-  if (e.target.id === "deleteModal") {
-    document.getElementById("deleteModal").classList.remove("show");
-  }
-}
-
-function checkConfirmText() {
-  const val = document.getElementById("confirmDeleteInput").value.trim();
-  const btn = document.getElementById("btnConfirmDelete");
-  if (val === "CONFIRMAR") {
-    btn.classList.add("ready");
-  } else {
-    btn.classList.remove("ready");
-  }
-}
-
-function executeAccountDeletion() {
-  if (document.getElementById("confirmDeleteInput").value.trim() !== "CONFIRMAR") return;
-
-  const currentUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
-
-  // 1. Borrar de la lista global de @usernames
-  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
-  usernamesList = usernamesList.filter(u => u !== currentUsername);
-  localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
-
-  // 2. Borrar de la base de datos permanente de correos
+  const emailInput = document.getElementById("email").value.trim().toLowerCase();
+  const passwordInput = document.getElementById("password").value;
   let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
-  for (let emailKey in usersDb) {
-    if (usersDb[emailKey].username === currentUsername) {
-      delete usersDb[emailKey];
-      break;
+  let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
+
+  if (isRegistering) {
+    const usernameInput = document.getElementById("regUsername").value.trim().toLowerCase();
+
+    if (usersDb[emailInput]) {
+      document.getElementById("emailExistsError").style.display = "block";
+      return;
     }
+
+    if (usernamesList.includes(usernameInput)) {
+      document.getElementById("usernameTakenError").style.display = "block";
+      return;
+    }
+
+    const joinDate = new Date().toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    usersDb[emailInput] = {
+      email: emailInput,
+      username: usernameInput,
+      fullname: usernameInput,
+      password: passwordInput,
+      joinDate: joinDate
+    };
+
+    localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+    usernamesList.push(usernameInput);
+    localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariCurrentEmail", emailInput);
+    localStorage.setItem("hikariUsername", usernameInput);
+    localStorage.setItem("hikariFullname", usernameInput);
+    localStorage.setItem("hikariJoinDate", joinDate);
+
+    window.location.href = "editar-perfil.html";
+
+  } else {
+    if (!usersDb[emailInput]) {
+      document.getElementById("emailError").style.display = "block";
+      return;
+    }
+
+    const userData = usersDb[emailInput];
+    if (userData.password && userData.password !== passwordInput) {
+      alert("Contraseña incorrecta. Revisa tus datos o usa '¿Olvidaste tu contraseña?'.");
+      return;
+    }
+
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    localStorage.setItem("hikariCurrentEmail", emailInput);
+    localStorage.setItem("hikariUsername", userData.username);
+    localStorage.setItem("hikariFullname", userData.fullname || "Usuario");
+    if (userData.avatar) localStorage.setItem("hikariAvatar", userData.avatar);
+    if (userData.banner) localStorage.setItem("hikariBanner", userData.banner);
+    if (userData.bio) localStorage.setItem("hikariBio", userData.bio);
+    if (userData.age) localStorage.setItem("hikariAge", userData.age);
+    if (userData.likes) localStorage.setItem("hikariLikes", JSON.stringify(userData.likes));
+
+    window.location.href = "perfil.html";
   }
-  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+});
 
-  // 3. Limpiar datos de sesión activa
-  const keysToRemove = [
-    "hikariUserLoggedIn", "hikariAuthProvider", "hikariCurrentEmail", "hikariUsername",
-    "hikariFullname", "hikariAge", "hikariHideAge", "hikariBio",
-    "hikariLikes", "hikariAvatar", "hikariBanner", "hikariJoinDate",
-    "hikariLastNameChange", "hikariIsLiked", "hikariIsFriend"
-  ];
-  keysToRemove.forEach(k => localStorage.removeItem(k));
-
-  window.location.href = "index.html";
+function clearAllRegisteredAccounts() {
+  if (confirm("¿Seguro que quieres borrar TODAS las cuentas y nombres de usuario registrados en la app?")) {
+    localStorage.clear();
+    alert("Todas las cuentas registradas han sido eliminadas.");
+    window.location.reload();
+  }
 }
 </script>
 </body>

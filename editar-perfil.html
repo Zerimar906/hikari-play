@@ -19,7 +19,6 @@
     min-height: 100vh;
   }
 
-  /* Misma estética de tarjeta que perfil.html */
   .social-card {
     width: 100%;
     max-width: 420px;
@@ -168,6 +167,81 @@
   }
   .clean-input:focus { border-color: #4079ff; }
 
+  .password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .password-wrapper input {
+    padding-right: 40px;
+  }
+  .btn-toggle-pass {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #7d8597;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px;
+    transition: color 0.2s;
+  }
+  .btn-toggle-pass:hover { color: #fff; }
+
+  .security-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn-security {
+    flex: 1;
+    min-width: 135px;
+    padding: 9px 12px;
+    background: #15171e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-security:hover {
+    background: #252a38;
+    border-color: #4079ff;
+  }
+  .security-subpanel {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .btn-sec-action {
+    width: 100%;
+    padding: 9px;
+    background: #4079ff;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+  .btn-sec-action:hover { background: #3060d0; }
+  .success-msg {
+    color: #30d158;
+    font-size: 0.78rem;
+    margin-top: 6px;
+    display: none;
+    font-weight: bold;
+  }
+
   .checkbox-row {
     display: flex;
     align-items: center;
@@ -177,7 +251,6 @@
     color: #7d8597;
   }
 
-  /* Desplegable de gustos limpio */
   .dropdown-wrapper {
     position: relative;
   }
@@ -279,7 +352,6 @@
   }
   .btn-delete-account:hover { background: rgba(255, 59, 48, 0.25); }
 
-  /* Ventana Flotante (Modal) de Confirmación de Eliminación */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -385,7 +457,6 @@
     <div id="avatarError" class="error-msg" style="margin-bottom:10px;">⚠️ Imagen no válida. No se permiten desnudos explícitos ni partes íntimas.</div>
 
     <form id="profileForm">
-      <!-- Bloque Identidad -->
       <div class="section-box">
         <div class="section-label">Identidad</div>
 
@@ -411,7 +482,6 @@
         </div>
       </div>
 
-      <!-- Bloque Personalización y Desplegable de Gustos -->
       <div class="section-box">
         <div class="section-label">Sobre ti y Gustos</div>
 
@@ -435,6 +505,52 @@
         </div>
       </div>
 
+      <div class="section-box">
+        <div class="section-label">Seguridad de Cuenta</div>
+        <div class="security-buttons">
+          <button type="button" class="btn-security" onclick="toggleSecurityPanel('changeEmailPanel')">
+            <i class="fas fa-envelope"></i> Cambiar correo
+          </button>
+          <button type="button" class="btn-security" onclick="toggleSecurityPanel('changePasswordPanel')">
+            <i class="fas fa-key"></i> Cambiar contraseña
+          </button>
+        </div>
+
+        <div id="changeEmailPanel" class="security-subpanel">
+          <div class="field-group">
+            <label>Nuevo correo electrónico</label>
+            <input type="email" id="newEmailInput" class="clean-input" placeholder="nuevo@correo.com">
+            <div id="newEmailError" class="error-msg"></div>
+            <div id="newEmailSuccess" class="success-msg">Correo actualizado correctamente.</div>
+          </div>
+          <button type="button" class="btn-sec-action" onclick="handleChangeEmail()">Guardar nuevo correo</button>
+        </div>
+
+        <div id="changePasswordPanel" class="security-subpanel">
+          <div class="field-group">
+            <label>Nueva contraseña</label>
+            <div class="password-wrapper">
+              <input type="password" id="newPasswordInput" class="clean-input" placeholder="Mínimo 6 caracteres">
+              <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('newPasswordInput', 'newPassEye')" title="Mostrar u ocultar contraseña">
+                <i class="fas fa-eye" id="newPassEye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Confirmar nueva contraseña</label>
+            <div class="password-wrapper">
+              <input type="password" id="confirmPasswordInput" class="clean-input" placeholder="Repite la contraseña">
+              <button type="button" class="btn-toggle-pass" onclick="togglePasswordVisibility('confirmPasswordInput', 'confirmPassEye')" title="Mostrar u ocultar contraseña">
+                <i class="fas fa-eye" id="confirmPassEye"></i>
+              </button>
+            </div>
+            <div id="newPasswordError" class="error-msg"></div>
+            <div id="newPasswordSuccess" class="success-msg">Contraseña actualizada correctamente.</div>
+          </div>
+          <button type="button" class="btn-sec-action" onclick="handleChangePassword()">Guardar nueva contraseña</button>
+        </div>
+      </div>
+
       <button type="submit" class="btn-save">Guardar Cambios</button>
       <button type="button" class="btn-delete-account" onclick="openDeleteModal()">
         <i class="fas fa-trash-alt"></i> Eliminar cuenta
@@ -443,7 +559,6 @@
   </div>
 </div>
 
-<!-- Ventana Flotante de Confirmación para Eliminar Cuenta -->
 <div id="deleteModal" class="modal-overlay" onclick="closeDeleteModal(event)">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
@@ -472,9 +587,27 @@ let selectedTags = JSON.parse(localStorage.getItem("hikariLikes") || "[]");
 let base64Avatar = localStorage.getItem("hikariAvatar") || "";
 let base64Banner = localStorage.getItem("hikariBanner") || "";
 
+function ensureSessionOnReload() {
+  if (localStorage.getItem("hikariUserLoggedIn") === "true") {
+    return true;
+  }
+
+  const currentEmail = localStorage.getItem("hikariCurrentEmail");
+  const currentUsername = localStorage.getItem("hikariUsername");
+  const usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const hasAnySavedUser = Object.keys(usersDb).length > 0;
+
+  if (currentEmail || currentUsername || hasAnySavedUser) {
+    localStorage.setItem("hikariUserLoggedIn", "true");
+    return true;
+  }
+
+  return false;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("hikariUserLoggedIn") !== "true") {
-    window.location.href = "login.html";
+  if (!ensureSessionOnReload()) {
+    window.location.href = "https://zerimar906.github.io/hikari-play/login.html";
     return;
   }
 
@@ -491,7 +624,118 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPills();
 });
 
-// Control del menú desplegable de gustos
+function toggleSecurityPanel(panelId) {
+  ["changeEmailPanel", "changePasswordPanel"].forEach(id => {
+    const panel = document.getElementById(id);
+    panel.style.display = (id === panelId && panel.style.display !== "block") ? "block" : "none";
+  });
+  ["newEmailError", "newEmailSuccess", "newPasswordError", "newPasswordSuccess"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+}
+
+function togglePasswordVisibility(inputId, iconId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById(iconId);
+  const show = input.type === "password";
+  input.type = show ? "text" : "password";
+  icon.classList.toggle("fa-eye", !show);
+  icon.classList.toggle("fa-eye-slash", show);
+}
+
+function findCurrentUserEmailKey(usersDb) {
+  const currentEmail = (localStorage.getItem("hikariCurrentEmail") || "").toLowerCase();
+  if (currentEmail && usersDb[currentEmail]) return currentEmail;
+
+  const currentUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
+  for (let emailKey in usersDb) {
+    if ((usersDb[emailKey].username || "").toLowerCase() === currentUsername) {
+      return emailKey;
+    }
+  }
+  return "";
+}
+
+function handleChangeEmail() {
+  const input = document.getElementById("newEmailInput");
+  const errEl = document.getElementById("newEmailError");
+  const okEl = document.getElementById("newEmailSuccess");
+  errEl.style.display = "none";
+  okEl.style.display = "none";
+
+  const newEmail = input.value.trim().toLowerCase();
+  if (!newEmail || !newEmail.includes("@")) {
+    errEl.textContent = "Escribe un correo electrónico válido.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const oldEmailKey = findCurrentUserEmailKey(usersDb);
+
+  if (newEmail !== oldEmailKey && usersDb[newEmail]) {
+    errEl.textContent = "Ese correo ya está registrado en otra cuenta.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  const existingRecord = oldEmailKey ? usersDb[oldEmailKey] : {
+    username: (localStorage.getItem("hikariUsername") || "usuario").toLowerCase(),
+    fullname: localStorage.getItem("hikariFullname") || "Usuario",
+    joinDate: localStorage.getItem("hikariJoinDate") || new Date().toLocaleDateString("es-ES", { month: "long", year: "numeric" })
+  };
+
+  existingRecord.email = newEmail;
+  usersDb[newEmail] = existingRecord;
+  if (oldEmailKey && oldEmailKey !== newEmail) {
+    delete usersDb[oldEmailKey];
+  }
+
+  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+  localStorage.setItem("hikariCurrentEmail", newEmail);
+  input.value = "";
+  okEl.style.display = "block";
+}
+
+function handleChangePassword() {
+  const pass1 = document.getElementById("newPasswordInput").value;
+  const pass2 = document.getElementById("confirmPasswordInput").value;
+  const errEl = document.getElementById("newPasswordError");
+  const okEl = document.getElementById("newPasswordSuccess");
+  errEl.style.display = "none";
+  okEl.style.display = "none";
+
+  if (pass1.length < 6) {
+    errEl.textContent = "La nueva contraseña debe tener al menos 6 caracteres.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  if (pass1 !== pass2) {
+    errEl.textContent = "Las contraseñas no coinciden.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
+  const emailKey = findCurrentUserEmailKey(usersDb);
+
+  if (!emailKey || !usersDb[emailKey]) {
+    errEl.textContent = "No se encontró una cuenta vinculada a esta sesión.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  usersDb[emailKey].password = pass1;
+  localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
+  localStorage.setItem("hikariCurrentEmail", emailKey);
+
+  document.getElementById("newPasswordInput").value = "";
+  document.getElementById("confirmPasswordInput").value = "";
+  okEl.style.display = "block";
+}
+
 function toggleDropdown() {
   document.getElementById("likesDropdown").classList.toggle("open");
 }
@@ -539,7 +783,6 @@ function renderPills() {
   `).join('');
 }
 
-// Carga de imágenes
 document.getElementById("avatarFile").addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) {
@@ -565,7 +808,6 @@ document.getElementById("bannerFile").addEventListener("change", (e) => {
   }
 });
 
-// Guardar Cambios y actualizar base de datos persistente
 document.getElementById("profileForm").addEventListener("submit", (e) => {
   e.preventDefault();
   document.querySelectorAll(".error-msg").forEach(el => el.style.display = "none");
@@ -576,14 +818,12 @@ document.getElementById("profileForm").addEventListener("submit", (e) => {
   const oldFullname = localStorage.getItem("hikariFullname");
   const bioText = document.getElementById("bio").value;
 
-  // 1. Validar obscenidades
   const fullCheck = (newUsername + " " + newFullname + " " + bioText).toLowerCase();
   if (badWords.some(w => fullCheck.includes(w))) {
     document.getElementById("bioError").style.display = "block";
     return;
   }
 
-  // 2. Validar unicidad de @username si cambió
   let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
   if (newUsername !== oldUsername) {
     if (usernamesList.includes(newUsername)) {
@@ -595,7 +835,6 @@ document.getElementById("profileForm").addEventListener("submit", (e) => {
     localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
   }
 
-  // 3. Validar regla de 7 días para nombre visual
   const now = Date.now();
   const lastChange = parseInt(localStorage.getItem("hikariLastNameChange") || "0");
   const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
@@ -607,7 +846,7 @@ document.getElementById("profileForm").addEventListener("submit", (e) => {
     localStorage.setItem("hikariLastNameChange", now.toString());
   }
 
-  // Guardar en sesión activa
+  localStorage.setItem("hikariUserLoggedIn", "true");
   localStorage.setItem("hikariUsername", newUsername);
   localStorage.setItem("hikariFullname", newFullname);
   localStorage.setItem("hikariAge", document.getElementById("age").value);
@@ -617,7 +856,6 @@ document.getElementById("profileForm").addEventListener("submit", (e) => {
   if (base64Avatar) localStorage.setItem("hikariAvatar", base64Avatar);
   if (base64Banner) localStorage.setItem("hikariBanner", base64Banner);
 
-  // Sincronizar con la base de datos permanente por correo
   let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
   for (let emailKey in usersDb) {
     if (usersDb[emailKey].username === oldUsername || usersDb[emailKey].username === newUsername) {
@@ -640,7 +878,6 @@ document.getElementById("profileForm").addEventListener("submit", (e) => {
   window.location.href = "perfil.html";
 });
 
-// Lógica de Ventana Flotante para Eliminar Cuenta
 function openDeleteModal() {
   document.getElementById("confirmDeleteInput").value = "";
   document.getElementById("btnConfirmDelete").classList.remove("ready");
@@ -668,12 +905,10 @@ function executeAccountDeletion() {
 
   const currentUsername = (localStorage.getItem("hikariUsername") || "").toLowerCase();
 
-  // 1. Borrar de la lista global de @usernames
   let usernamesList = JSON.parse(localStorage.getItem("hikariAllUsernames") || "[]");
   usernamesList = usernamesList.filter(u => u !== currentUsername);
   localStorage.setItem("hikariAllUsernames", JSON.stringify(usernamesList));
 
-  // 2. Borrar de la base de datos permanente de correos
   let usersDb = JSON.parse(localStorage.getItem("hikariUsersDatabase") || "{}");
   for (let emailKey in usersDb) {
     if (usersDb[emailKey].username === currentUsername) {
@@ -683,9 +918,8 @@ function executeAccountDeletion() {
   }
   localStorage.setItem("hikariUsersDatabase", JSON.stringify(usersDb));
 
-  // 3. Limpiar datos de sesión activa
   const keysToRemove = [
-    "hikariUserLoggedIn", "hikariAuthProvider", "hikariUsername",
+    "hikariUserLoggedIn", "hikariAuthProvider", "hikariCurrentEmail", "hikariUsername",
     "hikariFullname", "hikariAge", "hikariHideAge", "hikariBio",
     "hikariLikes", "hikariAvatar", "hikariBanner", "hikariJoinDate",
     "hikariLastNameChange", "hikariIsLiked", "hikariIsFriend"

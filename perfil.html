@@ -30,7 +30,6 @@
     border: 1px solid rgba(255,255,255,0.06);
   }
 
-  /* Botón de volver */
   .btn-back {
     position: absolute;
     top: 15px;
@@ -50,7 +49,6 @@
   }
   .btn-back:hover { background: #4079ff; }
 
-  /* Botón de editar en esquina derecha */
   .btn-top-edit {
     position: absolute;
     top: 15px;
@@ -68,7 +66,6 @@
   }
   .btn-top-edit:hover { background: #4079ff; }
 
-  /* Banner estilo tarjeta gamer */
   .card-banner {
     width: 100%;
     height: 140px;
@@ -93,7 +90,6 @@
     margin-top: -45px;
   }
 
-  /* Fila superior: Avatar + Estado en línea */
   .header-row {
     display: flex;
     align-items: flex-end;
@@ -125,7 +121,6 @@
     border-radius: 50%;
   }
 
-  /* Botones de acción rápida en la cabecera */
   .quick-actions {
     display: flex;
     gap: 8px;
@@ -168,7 +163,6 @@
     margin-bottom: 18px;
   }
 
-  /* Bloques de métricas estilo tarjeta */
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -192,7 +186,6 @@
     margin-top: 2px;
   }
 
-  /* Sección de Gustos */
   .section-box {
     background: #1f232e;
     padding: 14px;
@@ -260,7 +253,6 @@
         <span class="online-dot" title="En línea"></span>
       </div>
 
-      <!-- Botones independientes tipo TikTok -->
       <div class="quick-actions">
         <button id="btnFriend" class="action-btn" title="Añadir amigo" onclick="toggleFriend()">
           <i class="fas fa-user-plus"></i>
@@ -278,7 +270,6 @@
     <div id="viewUsername" class="user-handle">@-</div>
     <p id="viewBio" class="user-bio"></p>
 
-    <!-- Bloques estilo tarjeta social -->
     <div class="stats-grid">
       <div class="stat-box">
         <div id="likesCount" class="stat-num">0</div>
@@ -308,8 +299,16 @@
 </div>
 
 <script>
+const nowProfileTs = Date.now();
+const lastProfileLoad = parseInt(sessionStorage.getItem("hikariProfileLastLoad") || "0");
+sessionStorage.setItem("hikariProfileLastLoad", nowProfileTs.toString());
+
 document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("hikariUserLoggedIn") !== "true") {
+    if (nowProfileTs - lastProfileLoad < 1500) {
+      console.warn("Redirección detenida en perfil.html para evitar bucle.");
+      return;
+    }
     window.location.href = "login.html";
     return;
   }
@@ -334,7 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ? likes.map(l => `<span class="tag-pill">${l}</span>`).join('') 
     : '<span style="color:#7d8597; font-size:0.85rem;">Sin gustos seleccionados</span>';
 
-  // Cargar estados independientes
   updateInteractionUI();
 });
 
