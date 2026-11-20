@@ -1,94 +1,416 @@
 <!DOCTYPE html>
 <html dir='ltr' lang='es'>
 <head>
-<meta name="google" content="notranslate">  
+<meta name="google" content="notranslate">
 <meta charset='UTF-8'/>
-<meta content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' name='viewport'/>
+<meta content='width=device-width, initial-scale=1.0, maximum-scale=5.0' name='viewport'/>
 <title>Buscador - Hikari Play</title>
 
-<style type='text/css'>
-*{margin:0;padding:0;box-sizing:border-box;list-style:none;}
-a{text-decoration:none;}
-body{background:#000;font-family:Nunito,sans-serif;}
-.cards{display:grid;grid-template-columns:1fr 1fr 1fr; gap: 10px; padding: 10px;}
-.card{text-align:center;display:block;}
-.card img{width:100%; height:auto; border-radius:7px;}
-.card span{display:block; color:#fff; font-size:0.9rem; margin-top:5px;}
-a{-webkit-tap-highlight-color:transparent;} 
-.form__group{position:relative;padding:15px 0 0;margin:0 auto;margin-top:10px;margin-bottom:1rem;width:90%;}
-.form__field{font-family:inherit;width:100%;border:0;border-bottom:2px solid #ff000c;outline:0;font-size:1.3rem;color:#fff;padding:7px 0;background:0 0;}
-.form__field::placeholder{color:transparent;}
-.form__label{position:absolute;top:0;display:block;font-size:1rem;color:#ff000c;}
-.xaviec{background:#000;position:fixed;top:0;width:100%;z-index:1000;padding-bottom:10px;}
-</style>
-
-<link href='https://fonts.googleapis.com/css2?family=Nunito&display=swap' rel='stylesheet'/>
+<link href='https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap' rel='stylesheet'/>
+<link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet'/>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f0f0f">
 <link rel="apple-touch-icon" href="img/Logo.png">
+
+<style type='text/css'>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: #0d0f14;
+    color: #f3f5f9;
+    font-family: 'Nunito', sans-serif;
+    min-height: 100dvh;
+    padding-top: 76px;
+    padding-bottom: 28px;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Barra superior fija con estilo moderno */
+  .search-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(15, 18, 25, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e4e8f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .back-btn:hover {
+    background: rgba(64, 121, 255, 0.18);
+    border-color: rgba(64, 121, 255, 0.45);
+    color: #fff;
+  }
+
+  .search-box {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #181c26;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 0 12px;
+    height: 42px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .search-box:focus-within {
+    border-color: #4079ff;
+    box-shadow: 0 0 0 3px rgba(64, 121, 255, 0.18);
+  }
+
+  .search-icon {
+    color: #8791a8;
+    font-size: 0.9rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .search-box:focus-within .search-icon {
+    color: #6ea0ff;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .search-input::placeholder {
+    color: #7c859b;
+    font-weight: 400;
+  }
+
+  .clear-btn {
+    display: none;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #b7c0d4;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 6px;
+  }
+
+  .clear-btn.visible {
+    display: inline-flex;
+  }
+
+  .clear-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  /* Contenedor principal */
+  .search-main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 14px;
+  }
+
+  .results-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 2px;
+  }
+
+  .results-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #eef1f7;
+  }
+
+  .results-count {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #8b95ad;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  /* Cuadrícula de tarjetas */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (min-width: 640px) {
+    .cards {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (min-width: 920px) {
+    .cards {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: #151922;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .card:hover,
+  .card:active {
+    transform: translateY(-3px);
+    border-color: rgba(64, 121, 255, 0.55);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
+  }
+
+  .card-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background: #1d222e;
+    overflow: hidden;
+  }
+
+  .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+
+  .card:hover .card-img-wrap img {
+    transform: scale(1.04);
+  }
+
+  .card-title {
+    padding: 8px 8px 10px 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #eef1f7;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Estado vacío */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 48px 20px;
+    background: #151922;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    margin-top: 10px;
+  }
+
+  .empty-state.show {
+    display: block;
+  }
+
+  .empty-state i {
+    font-size: 2rem;
+    color: #4079ff;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .empty-state p {
+    font-size: 0.92rem;
+    color: #9ba4b8;
+    margin-bottom: 14px;
+  }
+
+  .reset-search-btn {
+    background: #4079ff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
 
-<!-- Barra de búsqueda fija superior -->
-<div class="xaviec">
-  <div class="form__group field">
-    <input autocomplete="off" type="text" class="form__field" placeholder="Buscar" id="myInput" onkeyup="filtrarAnime()" required />
-    <label for="myInput" class="form__label">Escribe el nombre del animé</label>
-  </div>
-</div>
+  <!-- Barra de búsqueda fija superior -->
+  <header class="search-header">
+    <a href="index.html" class="back-btn" title="Volver al inicio" aria-label="Volver al inicio">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="search-box">
+      <i class="fas fa-search search-icon"></i>
+      <input
+        autocomplete="off"
+        type="search"
+        class="search-input"
+        placeholder="Buscar anime, serie o película..."
+        id="myInput"
+        oninput="filtrarAnime()"
+        aria-label="Buscar anime"
+      />
+      <button type="button" id="clearBtn" class="clear-btn" onclick="limpiarBusqueda()" title="Limpiar" aria-label="Limpiar búsqueda">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </header>
 
-<br><br><br><br>
+  <main class="search-main">
+    <div class="results-bar">
+      <h1 class="results-title" id="resultsTitle">Catálogo</h1>
+      <span class="results-count" id="resultsCount">3 títulos</span>
+    </div>
 
-<!-- Listado de tarjetas -->
-<center>
-  <ul class="cards" id="cards">
-    <li class="anime-item" data-name="elfen lied">
-      <a href="Elfen-Lied.html" class="card">
-        <img alt="Elfen Lied" src="img/Elfen-lied.jpg"/>
-        <span>Elfen Lied</span>
-      </a>
-    </li>
-    <li class="anime-item" data-name="yakuza amo de casa">
-      <a href="go:yakuza" class="card">
-        <img alt="Yakuza" src="img/Yakusa-amo-de-casa.jpg"/>
-        <span>Yakuza amo de casa</span>
-      </a>
-    </li>
-    <li class="anime-item" data-name="vermeil in gold">
-      <a href="go:Vermeil" class="card">
-        <img alt="Vermeil in Gold" src="img/Vermeil-in-Gold.jpg"/>
-        <span>Vermeil in Gold</span>
-      </a>
-    </li>
-  </ul>
-</center>
+    <ul class="cards" id="cards">
+      <li class="anime-item" data-name="elfen lied">
+        <a href="Elfen-Lied.html" class="card">
+          <div class="card-img-wrap">
+            <img alt="Elfen Lied" src="img/Elfen-lied.jpg" loading="lazy"/>
+          </div>
+          <span class="card-title">Elfen Lied</span>
+        </a>
+      </li>
+      <li class="anime-item" data-name="yakuza amo de casa">
+        <a href="go:yakuza" class="card">
+          <div class="card-img-wrap">
+            <img alt="Yakuza amo de casa" src="img/Yakusa-amo-de-casa.jpg" loading="lazy"/>
+          </div>
+          <span class="card-title">Yakuza amo de casa</span>
+        </a>
+      </li>
+      <li class="anime-item" data-name="vermeil in gold">
+        <a href="go:Vermeil" class="card">
+          <div class="card-img-wrap">
+            <img alt="Vermeil in Gold" src="img/Vermeil-in-Gold.jpg" loading="lazy"/>
+          </div>
+          <span class="card-title">Vermeil in Gold</span>
+        </a>
+      </li>
+    </ul>
 
-<!-- Script de búsqueda limpio y funcional -->
-<script>
-function filtrarAnime() {
-    let input = document.getElementById('myInput').value.toLowerCase();
-    let items = document.getElementsByClassName('anime-item');
+    <div id="emptyState" class="empty-state">
+      <i class="fas fa-film"></i>
+      <p id="emptyMessage">No se encontraron resultados para tu búsqueda.</p>
+      <button type="button" class="reset-search-btn" onclick="limpiarBusqueda()">Ver todo el catálogo</button>
+    </div>
+  </main>
 
-    for (let i = 0; i < items.length; i++) {
-        let nombre = items[i].getAttribute('data-name');
-        if (nombre.includes(input)) {
-            items[i].style.display = ""; // Muestra la tarjeta si coincide
-        } else {
-            items[i].style.display = "none"; // Oculta por completo si no coincide
-        }
+  <script>
+    function normalizarTexto(texto) {
+      return String(texto || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
     }
-}
-</script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/hikari-play/sw.js')
-        .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
-        .catch((err) => console.log('Error al registrar el Service Worker:', err));
-    });
-  }
-</script>
-<script src="js/auth.js"></script>
+    function filtrarAnime() {
+      const inputEl = document.getElementById('myInput');
+      const clearBtn = document.getElementById('clearBtn');
+      const titleEl = document.getElementById('resultsTitle');
+      const countEl = document.getElementById('resultsCount');
+      const emptyEl = document.getElementById('emptyState');
+      const emptyMsgEl = document.getElementById('emptyMessage');
+
+      const query = normalizarTexto(inputEl.value);
+      const items = document.getElementsByClassName('anime-item');
+      let visibles = 0;
+
+      clearBtn.classList.toggle('visible', inputEl.value.length > 0);
+
+      for (let i = 0; i < items.length; i++) {
+        const nombre = normalizarTexto(items[i].getAttribute('data-name'));
+        const coincide = !query || nombre.includes(query);
+        items[i].style.display = coincide ? "" : "none";
+        if (coincide) visibles++;
+      }
+
+      titleEl.textContent = query ? `Resultados para "${inputEl.value.trim()}"` : "Catálogo";
+      countEl.textContent = visibles === 1 ? "1 título" : `${visibles} títulos`;
+
+      if (visibles === 0) {
+        emptyMsgEl.textContent = `No encontramos ningún título con "${inputEl.value.trim()}".`;
+        emptyEl.classList.add('show');
+      } else {
+        emptyEl.classList.remove('show');
+      }
+    }
+
+    function limpiarBusqueda() {
+      const inputEl = document.getElementById('myInput');
+      inputEl.value = "";
+      filtrarAnime();
+      inputEl.focus();
+    }
+
+    document.addEventListener("DOMContentLoaded", filtrarAnime);
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/hikari-play/sw.js')
+          .then((reg) => console.log('Service Worker registrado con éxito:', reg.scope))
+          .catch((err) => console.log('Error al registrar el Service Worker:', err));
+      });
+    }
+  </script>
+  <script src="js/auth.js"></script>
 </body>
 </html>

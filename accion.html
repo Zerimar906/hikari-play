@@ -3,16 +3,188 @@
 <head>
 <meta name="google" content="notranslate">
 <meta charset='UTF-8' />
-<meta content='width=device-width, initial-scale=1, user-scalable=1, minimum-scale=1, maximum-scale=5' name='viewport' />
+<meta content='width=device-width, user-scalable=1, initial-scale=1, minimum-scale=1, maximum-scale=5' name='viewport' />
 <meta content='IE=edge' http-equiv='X-UA-Compatible' />
 <meta content='max-image-preview:large' name='robots' />
+<title>Acción - Hikari Play</title>
+
 <link href="css/style.css" rel="stylesheet">
+<link href="https://dl.dropbox.com/s/83ley00l5ongj2v/style.css" rel="stylesheet">
+
 <script src="https://code.iconify.design/2/2.1.0/iconify.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans&display=swap" rel="stylesheet">
 <link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="img/Logo.png">
 <meta name="theme-color" content="#0f0f0f">
+
+<style>
+  body#mainCont {
+    background: #0d0f14 !important;
+    color: #f3f5f9;
+    font-family: 'Nunito', 'PT Sans', sans-serif;
+    padding-bottom: 32px;
+  }
+
+  body#mainCont.drK {
+    background: #090b10 !important;
+  }
+
+  /* Cabecera y menú lateral alineados con la misma estética */
+  #header .headCn {
+    background: rgba(15, 18, 25, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .blogMn .mnBr {
+    background-color: #151922 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  body.drK .blogMn .mnBr {
+    background-color: #12151d !important;
+  }
+
+  .mnMn li.br a.a {
+    border-radius: 10px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .mnMn li.br a.a:hover {
+    background: rgba(64, 121, 255, 0.14);
+    color: #6ea0ff;
+  }
+
+  /* Slider principal estilizado */
+  #slider {
+    margin: 12px 14px 6px 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #151922;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+  }
+
+  #slider:empty {
+    display: none;
+  }
+
+  #slider figure img {
+    object-fit: cover;
+  }
+
+  /* Encabezado de categoría */
+  .poster {
+    max-width: 1140px;
+    margin: 18px auto 10px auto;
+    padding: 0 14px;
+  }
+
+  .poster a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    padding: 4px 2px;
+  }
+
+  .poster h4.alignleft {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #eef1f7;
+    letter-spacing: 0.2px;
+  }
+
+  .poster h4.alignleft:empty {
+    display: none;
+  }
+
+  .poster h4.alignright {
+    margin: 0;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #8ab2ff;
+    background: rgba(64, 121, 255, 0.14);
+    border: 1px solid rgba(64, 121, 255, 0.35);
+    padding: 4px 10px;
+    border-radius: 999px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .poster h4.alignright:empty {
+    display: none;
+  }
+
+  .poster a:hover h4.alignright {
+    background: #4079ff;
+    color: #fff;
+  }
+
+  /* Filas horizontales de tarjetas estilizadas */
+  .scrollmenu {
+    max-width: 1140px;
+    margin: 0 auto 8px auto;
+    padding: 2px 14px 8px 14px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scrollmenu::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .scrollmenu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+  }
+
+  .scrollmenu > a {
+    flex: 0 0 124px;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (min-width: 640px) {
+    .scrollmenu > a {
+      flex: 0 0 146px;
+    }
+  }
+
+  .scrollmenu .xplus {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    background: #151922;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .scrollmenu > a:hover .xplus,
+  .scrollmenu > a:active .xplus {
+    transform: translateY(-3px);
+    border-color: rgba(64, 121, 255, 0.55);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  .scrollmenu .xplus img.xaviec {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+
+  .scrollmenu > a:hover .xplus img.xaviec {
+    transform: scale(1.04);
+  }
+</style>
 </head>
 <body class='oneGrd MN-2 mobS hdMn bD onIndx onHm' id='mainCont'>
 <script>/*<![CDATA[*/ (localStorage.getItem('mode')) === 'darkmode' ? document.querySelector('#mainCont').classList.add('drK') : document.querySelector('#mainCont').classList.remove('drK') /*]]>*/</script>
@@ -91,7 +263,7 @@
           <div class='mnMob section' id='nav-widget-1'>
             <div class='widget PageList' data-version='2' id='PageList002'>
               <ul class='mMenu'>
-                <li><a>Telegram</a></li>                          
+                <li><a>Telegram</a></li>
                 <li><a>Zerimar</a></li>
               </ul>
             </div>
@@ -114,6 +286,18 @@
                   </a>
                 </li>
                 <li class='br'>
+                  <a class='a' href='anime.html' itemprop='url'>
+                    <span class="iconify" data-icon="bx:bxs-sparkles" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Animes</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='doramas.html' itemprop='url'>
+                    <span class="iconify" data-icon="mdi:heart-box-outline" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Doramas</span>
+                  </a>
+                </li>
+                <li class='br'>
                   <a class='a' href='peliculas.html' itemprop='url'>
                     <span class="iconify" data-icon="bx:bxs-film" data-width="24" data-height="24"></span>
                     <span class='n' itemprop='name'>Películas</span>
@@ -132,7 +316,7 @@
                   </a>
                 </li>
                 <li class='br'>
-                  <a class='a' href='go:Radio' itemprop='url'>
+                  <a class='a' href='radio.html' itemprop='url'>
                     <span class="iconify" data-icon="ion:radio-sharp" data-width="24" data-height="24"></span>
                     <span class='n' itemprop='name'>Radio</span>
                   </a>

@@ -6,7 +6,7 @@
 <meta content='IE=edge' http-equiv='X-UA-Compatible' />
 <meta content='max-image-preview:large' name='robots' />
 <meta name="google" content="notranslate">
-<title>Chat Global - Hikari Play</title>
+<title>Chat - Hikari Play</title>
 
 <!-- Enlace al CSS local -->
 <link href="css/style.css" rel="stylesheet">
@@ -17,39 +17,77 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
 <link href='https://use.fontawesome.com/releases/v5.3.1/css/all.css' rel='stylesheet' />
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f0f0f">
 <link rel="apple-touch-icon" href="img/Logo.png">
+<meta name="theme-color" content="#0f0f0f">
 
 <style>
-  /* Estilos del Chat Global integrados dentro de la plantilla */
+  html, body {
+    overflow: hidden !important;
+    height: 100%;
+  }
+
+  /* Mantener header y menú lateral por encima del chat fijo */
+  #header {
+    position: relative;
+    z-index: 500;
+  }
+
+  .blogMn {
+    z-index: 990;
+  }
+
+  .blogMn .fCls {
+    z-index: 995 !important;
+  }
+
+  .blogMn .mnBr {
+    z-index: 1000 !important;
+    background-color: #ffffff;
+  }
+
+  body.drK .blogMn .mnBr {
+    background-color: #15171e !important;
+  }
+
+  /* Sección fija debajo del header sin scroll de página */
   .chat-container {
-    max-width: 720px;
-    margin: 15px auto 20px auto;
-    padding: 0 12px;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(100% - 56px);
+    height: calc(100dvh - 56px);
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 95px);
-    height: calc(100dvh - 95px);
+    z-index: 10;
   }
 
   .chat-box-card {
     flex: 1;
+    width: 100%;
+    height: 100%;
     background: #15171e;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0;
+    border: none;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    position: relative;
   }
 
   .chat-room-bar {
-    padding: 12px 16px;
+    padding: 10px 14px;
     background: rgba(255,255,255,0.03);
     border-bottom: 1px solid rgba(255,255,255,0.07);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
+    flex-shrink: 0;
   }
 
   .chat-room-title {
@@ -61,33 +99,134 @@
     gap: 8px;
   }
 
-  .online-pill {
-    font-size: 0.72rem;
-    background: rgba(52, 199, 89, 0.15);
-    color: #34c759;
-    padding: 3px 9px;
+  .switch-room-btn {
+    background: rgba(64, 121, 255, 0.16);
+    border: 1px solid rgba(64, 121, 255, 0.4);
+    color: #8ab2ff;
+    padding: 4px 10px;
     border-radius: 12px;
+    font-size: 0.74rem;
     font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
   }
 
+  /* Cinta sencilla como la primera, pero desplazándose suavemente */
+  .chat-rules-ribbon {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 6px 0;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .chat-rules-track {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    font-size: 0.74rem;
+    color: #9aa2b5;
+    will-change: transform;
+    animation: cintaSimpleMove 16s linear infinite;
+  }
+
+  .chat-rules-ribbon:hover .chat-rules-track,
+  .chat-rules-ribbon:active .chat-rules-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes cintaSimpleMove {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-rules-track {
+      animation: none !important;
+      padding-left: 12px;
+      white-space: normal;
+    }
+  }
+
+  /* Barra superior de amigos */
+  .friends-bar {
+    background: #12141b;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .friends-bar::-webkit-scrollbar { display: none; }
+
+  .friend-chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 3px 9px 3px 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #e4e7ef;
+    font-size: 0.76rem;
+    font-weight: bold;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .friend-chip img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .friend-chip.active-dm {
+    background: rgba(64, 121, 255, 0.24);
+    border-color: #4079ff;
+    color: #fff;
+  }
+
+  .friends-empty-hint {
+    font-size: 0.74rem;
+    color: #7d8597;
+    white-space: nowrap;
+  }
+
+  /* Aviso de advertencia o bloqueo */
+  .mod-alert-banner {
+    display: none;
+    background: rgba(255, 59, 92, 0.16);
+    border-bottom: 1px solid rgba(255, 59, 92, 0.35);
+    color: #ff7b90;
+    font-size: 0.76rem;
+    padding: 7px 12px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .mod-alert-banner.show {
+    display: block;
+  }
+
+  /* Única zona que desliza: los mensajes */
   .messages-area {
     flex: 1;
     overflow-y: auto;
-    padding: 14px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    scroll-behavior: smooth;
-  }
-
-  .system-notice {
-    text-align: center;
-    font-size: 0.76rem;
-    color: #8a92a6;
-    background: rgba(255,255,255,0.04);
-    padding: 7px 12px;
-    border-radius: 10px;
-    margin: 0 auto 6px auto;
   }
 
   .msg-row {
@@ -95,6 +234,7 @@
     align-items: flex-end;
     gap: 9px;
     max-width: 85%;
+    flex-shrink: 0;
   }
 
   .msg-row.own {
@@ -160,28 +300,150 @@
     color: #f5f5f5;
   }
 
-  /* Barra de emojis */
-  .emoji-bar {
-    background: #12141b;
-    padding: 7px 12px;
+  .msg-photo {
+    display: block;
+    max-width: 210px;
+    max-height: 210px;
+    border-radius: 10px;
+    margin-top: 4px;
+    object-fit: cover;
+  }
+
+  .msg-sticker {
+    font-size: 2.3rem;
+    line-height: 1.15;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .msg-gif {
+    display: block;
+    max-width: 210px;
+    max-height: 170px;
+    border-radius: 10px;
+    margin-top: 4px;
+    object-fit: cover;
+  }
+
+  /* Panel flotante estilo WhatsApp (Emojis / Stickers / GIFs) */
+  .wa-picker-popover {
+    display: none;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 62px;
+    background: #181b24;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+    z-index: 40;
+    overflow: hidden;
+  }
+  .wa-picker-popover.show {
+    display: block;
+  }
+
+  .wa-picker-tabs {
     display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: #12141b;
   }
-  .emoji-bar::-webkit-scrollbar { display: none; }
 
-  .emoji-btn {
-    background: rgba(255,255,255,0.06);
+  .wa-tab-btn {
+    flex: 1;
+    background: transparent;
     border: none;
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-size: 1.1rem;
+    color: #8a92a6;
+    padding: 8px 8px;
+    font-size: 0.76rem;
+    font-weight: bold;
     cursor: pointer;
-    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-bottom: 2px solid transparent;
   }
 
-  /* Barra de texto */
+  .wa-tab-btn.active {
+    color: #6ea0ff;
+    border-bottom-color: #4079ff;
+    background: rgba(64,121,255,0.08);
+  }
+
+  .wa-picker-grid {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    max-height: 175px;
+    overflow-y: auto;
+  }
+
+  .wa-picker-grid.gifs-mode {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .wa-item-btn {
+    background: rgba(255,255,255,0.05);
+    border: none;
+    border-radius: 10px;
+    padding: 6px 4px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1.2;
+    transition: background 0.15s ease;
+  }
+  .wa-item-btn:hover {
+    background: rgba(255,255,255,0.12);
+  }
+
+  .wa-sticker-item {
+    font-size: 1.75rem;
+    padding: 8px 4px;
+  }
+
+  .wa-gif-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .wa-gif-btn:hover {
+    border-color: #4079ff;
+  }
+  .wa-gif-btn img {
+    width: 100%;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 7px;
+    display: block;
+  }
+  .wa-gif-btn span {
+    font-size: 0.66rem;
+    color: #c7cddb;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .wa-locked-note {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.76rem;
+    color: #9aa2b5;
+    padding: 14px 8px;
+  }
+
+  /* Barra de texto fija abajo */
   .chat-input-bar {
     background: #1a1d26;
     padding: 9px 12px;
@@ -189,9 +451,40 @@
     align-items: center;
     gap: 8px;
     border-top: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
   }
 
-  .chat-input-bar input {
+  .tool-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #9bb8ff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .tool-icon-btn:hover,
+  .tool-icon-btn.active {
+    background: rgba(64,121,255,0.22);
+    border-color: #4079ff;
+    color: #fff;
+  }
+
+  .photo-btn {
+    display: none;
+  }
+  .photo-btn.show {
+    display: flex;
+  }
+
+  .chat-input-bar input[type="text"] {
     flex: 1;
     background: #12141b;
     border: 1px solid rgba(255,255,255,0.1);
@@ -200,6 +493,13 @@
     color: #fff;
     font-size: 0.9rem;
     outline: none;
+  }
+
+  .chat-input-bar input:disabled,
+  .send-btn:disabled,
+  .tool-icon-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 
   .send-btn {
@@ -217,61 +517,200 @@
     flex-shrink: 0;
   }
 
-  /* Modal Tarjeta de Perfil */
+  /* ==========================================
+     Ventanita Flotante Resumen de Perfil
+     ========================================== */
   .mini-profile-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.72);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    padding: 16px;
   }
   .mini-profile-modal.show { display: flex; }
 
   .mini-card {
-    width: 290px;
+    width: 100%;
+    max-width: 325px;
     background: #15171e;
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
     text-align: center;
     position: relative;
     color: #fff;
+    box-shadow: 0 14px 36px rgba(0,0,0,0.65);
   }
-  .mini-banner {
-    height: 75px;
-    background: linear-gradient(135deg, #1f2833, #4079ff);
+
+  .mini-banner-wrap {
+    position: relative;
+    height: 92px;
+    width: 100%;
+    overflow: hidden;
+    background: #1d2230;
   }
+
+  .mini-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(7px) brightness(0.42) saturate(0.75);
+    transform: scale(1.12);
+    display: block;
+  }
+
+  .mini-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(15,17,23,0.25), rgba(21,23,30,0.88));
+  }
+
+  .mini-view-profile-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(21, 23, 30, 0.82);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    font-size: 0.74rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 3;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .mini-view-profile-btn:hover {
+    background: #4079ff;
+    border-color: #4079ff;
+    color: #fff;
+  }
+
   .mini-close {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(0,0,0,0.6);
-    border: none;
+    background: rgba(21, 23, 30, 0.82);
+    border: 1px solid rgba(255,255,255,0.15);
     color: #fff;
     width: 28px;
     height: 28px;
     border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
   }
+
   .mini-content {
     padding: 0 16px 18px 16px;
-    margin-top: -30px;
+    margin-top: -36px;
+    position: relative;
+    z-index: 2;
   }
+
   .mini-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 14px;
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
     border: 3px solid #15171e;
     object-fit: cover;
-    background: #000;
+    background: #0c0e13;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45);
   }
-  .mini-name { font-size: 1.05rem; font-weight: bold; margin-top: 6px; }
-  .mini-user { font-size: 0.78rem; color: #7d8597; margin-bottom: 8px; }
-  .mini-bio { font-size: 0.8rem; color: #ccc; margin-bottom: 12px; }
-  .mini-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
-  .mini-tag { background: rgba(64,121,255,0.2); color: #6ea0ff; padding: 3px 9px; border-radius: 12px; font-size: 0.74rem; }
+
+  .mini-name {
+    font-size: 1.08rem;
+    font-weight: bold;
+    margin-top: 6px;
+    color: #fff;
+  }
+
+  .mini-user {
+    font-size: 0.78rem;
+    color: #8a92a6;
+    margin-bottom: 8px;
+  }
+
+  .mini-bio {
+    font-size: 0.82rem;
+    color: #d2d6e0;
+    line-height: 1.35;
+    margin-bottom: 10px;
+  }
+
+  .mini-tags {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .mini-tag {
+    background: rgba(64,121,255,0.18);
+    color: #7ea8ff;
+    border: 1px solid rgba(64,121,255,0.3);
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 0.73rem;
+  }
+
+  .mini-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .mini-action-btn {
+    background: #1f232e;
+    border: 1px solid rgba(255,255,255,0.09);
+    color: #e4e7ef;
+    border-radius: 12px;
+    padding: 8px 6px;
+    font-size: 0.73rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+  }
+
+  .mini-action-btn i {
+    font-size: 0.92rem;
+  }
+
+  .mini-action-btn:hover {
+    border-color: rgba(64,121,255,0.5);
+    background: #262b38;
+  }
+
+  .mini-action-btn.active-like {
+    background: rgba(255, 59, 92, 0.18);
+    border-color: #ff3b5c;
+    color: #ff5c77;
+  }
+
+  .mini-action-btn.active-friend {
+    background: rgba(52, 199, 89, 0.18);
+    border-color: #34c759;
+    color: #4cd970;
+  }
+
+  .mini-action-btn.dm-btn {
+    background: rgba(64, 121, 255, 0.16);
+    border-color: rgba(64, 121, 255, 0.4);
+    color: #8ab2ff;
+  }
 </style>
 </head>
 <body class='oneGrd MN-2 mobS hdMn bD onIndx onHm' id='mainCont'>
@@ -376,6 +815,18 @@
                   </a>
                 </li>
                 <li class='br'>
+                  <a class='a' href='anime.html' itemprop='url'>
+                    <img class="menu-custom-icon" src="https://img.icons8.com/hatch/64/anime.png" alt="Anime" width="24" height="24" />
+                    <span class='n' itemprop='name'>Anime</span>
+                  </a>
+                </li>
+                <li class='br'>
+                  <a class='a' href='doramas.html' itemprop='url'>
+                    <span class="iconify" data-icon="mdi:heart-box-outline" data-width="24" data-height="24"></span>
+                    <span class='n' itemprop='name'>Doramas</span>
+                  </a>
+                </li>
+                <li class='br'>
                   <a class='a' href='peliculas.html' itemprop='url'>
                     <span class="iconify" data-icon="bx:bxs-film" data-width="24" data-height="24"></span>
                     <span class='n' itemprop='name'>Películas</span>
@@ -394,7 +845,7 @@
                   </a>
                 </li>
                 <li class='br'>
-                  <a class='a' href='go:Radio' itemprop='url'>
+                  <a class='a' href='radio.html' itemprop='url'>
                     <span class="iconify" data-icon="ion:radio-sharp" data-width="24" data-height="24"></span>
                     <span class='n' itemprop='name'>Radio</span>
                   </a>
@@ -421,51 +872,99 @@
   </div>
 </div>
 
-<!-- Sección Principal del Chat Global dentro de la misma interfaz -->
+<!-- Sección Fija del Chat Global / Privado -->
 <div class="chat-container">
   <div class="chat-box-card">
     <div class="chat-room-bar">
       <div class="chat-room-title">
-        <i class="fas fa-comments" style="color:#4079ff;"></i>
-        <span>Chat Global</span>
+        <i id="roomIcon" class="fas fa-comments" style="color:#4079ff;"></i>
+        <span id="roomTitleText">Chat Global</span>
       </div>
-      <span class="online-pill">Solo texto y emojis</span>
+      <button type="button" id="backToGlobalBtn" class="switch-room-btn" style="display:none;" onclick="openGlobalChat()">
+        <i class="fas fa-globe-americas"></i> Global
+      </button>
     </div>
+
+    <!-- Cinta sencilla en movimiento debajo de la cabecera del chat -->
+    <div id="chatRulesRibbon" class="chat-rules-ribbon">
+      <span id="chatRulesText" class="chat-rules-track"></span>
+    </div>
+
+    <!-- Barra superior de amigos -->
+    <div id="friendsBar" class="friends-bar"></div>
+
+    <!-- Aviso de advertencia o bloqueo -->
+    <div id="modAlertBanner" class="mod-alert-banner"></div>
 
     <div id="messagesArea" class="messages-area"></div>
 
-    <!-- Barra de Emojis Rápidos -->
-    <div class="emoji-bar">
-      <button type="button" class="emoji-btn" onclick="addEmoji('😀')">😀</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('😂')">😂</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('🍿')">🍿</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('🎬')">🎬</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('😱')">😱</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('👏')">👏</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('✨')">✨</button>
-      <button type="button" class="emoji-btn" onclick="addEmoji('😎')">😎</button>
+    <!-- Panel flotante estilo WhatsApp con pestañas Emojis, Stickers y GIFs -->
+    <div id="waPickerPopover" class="wa-picker-popover">
+      <div class="wa-picker-tabs">
+        <button type="button" id="tabEmojisBtn" class="wa-tab-btn active" onclick="switchPickerTab('emojis')">
+          <i class="far fa-smile"></i> Emojis
+        </button>
+        <button type="button" id="tabStickersBtn" class="wa-tab-btn" onclick="switchPickerTab('stickers')">
+          <i class="far fa-sticky-note"></i> Stickers
+        </button>
+        <button type="button" id="tabGifsBtn" class="wa-tab-btn" onclick="switchPickerTab('gifs')">
+          <i class="fas fa-film"></i> GIFs
+        </button>
+      </div>
+      <div id="waPickerGrid" class="wa-picker-grid"></div>
     </div>
 
     <form class="chat-input-bar" onsubmit="sendMessage(event)">
+      <button type="button" id="waPickerToggleBtn" class="tool-icon-btn" onclick="toggleWaPicker()" title="Emojis, stickers y GIFs">
+        <i class="far fa-smile"></i>
+      </button>
+
+      <input type="file" id="privatePhotoInput" accept="image/*" style="display:none;" onchange="handlePrivatePhoto(event)">
+      <button type="button" id="privatePhotoBtn" class="tool-icon-btn photo-btn" onclick="document.getElementById('privatePhotoInput').click()" title="Enviar foto en privado">
+        <i class="fas fa-image"></i>
+      </button>
+
       <input type="text" id="chatInput" placeholder="Escribe un mensaje o emoji..." maxlength="200" autocomplete="off" required>
-      <button type="submit" class="send-btn" title="Enviar"><i class="fas fa-paper-plane"></i></button>
+      <button type="submit" id="sendBtn" class="send-btn" title="Enviar"><i class="fas fa-paper-plane"></i></button>
     </form>
   </div>
 </div>
 
-<!-- Modal Perfil Rápido al tocar un usuario -->
+<!-- Ventanita Flotante Resumen de Perfil -->
 <div id="miniProfileModal" class="mini-profile-modal" onclick="closeMiniProfile(event)">
   <div class="mini-card" onclick="event.stopPropagation()">
-    <button class="mini-close" onclick="document.getElementById('miniProfileModal').classList.remove('show')"><i class="fas fa-times"></i></button>
-    <div class="mini-banner"></div>
+    <div class="mini-banner-wrap">
+      <img id="miniBannerImg" class="mini-banner-img" src="img/Logo.png" alt="Fondo de perfil">
+      <div class="mini-banner-overlay"></div>
+      <a id="miniProfileLink" href="perfil.html" class="mini-view-profile-btn">
+        <i class="fas fa-user"></i> Ver perfil
+      </a>
+      <button type="button" class="mini-close" onclick="closeMiniProfile()" title="Cerrar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
     <div class="mini-content">
       <img id="miniAvatar" class="mini-avatar" src="img/Logo.png" alt="Avatar">
       <div id="miniName" class="mini-name">-</div>
       <div id="miniUser" class="mini-user">@-</div>
       <div id="miniBio" class="mini-bio">-</div>
       <div id="miniTags" class="mini-tags"></div>
+
+      <div class="mini-actions">
+        <button type="button" id="btnLikeUser" class="mini-action-btn" onclick="toggleLikeUser()">
+          <i class="fas fa-heart"></i>
+          <span id="labelLikeUser">Me gusta</span>
+        </button>
+        <button type="button" id="btnFriendUser" class="mini-action-btn" onclick="toggleFriendUser()">
+          <i class="fas fa-user-plus"></i>
+          <span id="labelFriendUser">Agregar</span>
+        </button>
+        <button type="button" class="mini-action-btn dm-btn" onclick="startPrivateChat()">
+          <i class="fas fa-paper-plane"></i>
+          <span>Mensaje</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -475,11 +974,49 @@
 <script src='https://dl.dropbox.com/s/x2to4fmvv2ftcqn/xscript.js'></script>
 
 <script>
+  const ONE_HOUR_MS = 60 * 60 * 1000;
+  const QUICK_EMOJIS = ['😀', '😂', '🔥', '❤️', '🍿', '🎬', '😱', '👏', '✨', '😎', '😍', '🙌'];
+  const PRIVATE_STICKERS = ['😘', '😉', '💋', '🙈', '🥰', '😏', '💖', '🔥', '💘', '😻', '🥂', '🌹'];
+
+  const PRIVATE_GIFS = [
+    {
+      id: "wink",
+      label: "Guiño",
+      url: "https://media.giphy.com/media/13CoXDiaCcCoyk/giphy.gif"
+    },
+    {
+      id: "hearts",
+      label: "Corazones",
+      url: "https://media.giphy.com/media/l0amJzVHIAfl7jMDOS/giphy.gif"
+    },
+    {
+      id: "fire",
+      label: "Fuego",
+      url: "https://media.giphy.com/media/3o72FfM5HJydZafgUE/giphy.gif"
+    },
+    {
+      id: "laugh",
+      label: "Risa",
+      url: "https://media.giphy.com/media/10JhviFuU2gWD6/giphy.gif"
+    },
+    {
+      id: "party",
+      label: "Brindis",
+      url: "https://media.giphy.com/media/g9582DNuQppxC/giphy.gif"
+    },
+    {
+      id: "shock",
+      label: "Sorpresa",
+      url: "https://media.giphy.com/media/5VKbvrjxpVJCM/giphy.gif"
+    }
+  ];
+
   const demoProfiles = {
     "sakura_chan": {
       fullname: "Sakura",
       username: "sakura_chan",
       avatar: "img/Logo.png",
+      banner: "img/Logo.png",
       bio: "Recomendando animes y dramas todos los días.",
       tags: ["Anime", "Música"]
     },
@@ -487,6 +1024,7 @@
       fullname: "Kenji",
       username: "kenji_kun",
       avatar: "img/Logo.png",
+      banner: "img/Logo.png",
       bio: "Buscando qué ver esta noche 🍿",
       tags: ["Series", "Videojuegos"]
     }
@@ -515,8 +1053,14 @@
     }
   ];
 
+  let activeModalUserKey = null;
+  let activePrivateUserKey = null;
+  let activePickerTab = 'emojis';
+  let isPickerOpen = false;
+  let moderationInterval = null;
+
   function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, tag => ({
+    return String(str).replace(/[&<>"']/g, tag => ({
       '&': '&amp;',
       '<': '&lt;',
       '>': '&gt;',
@@ -525,97 +1069,535 @@
     }[tag]));
   }
 
-  function getStoredMessages() {
+  function containsURL(text) {
+    const urlRegex = /(https?:\/\/|www\.|ftp:\/\/|[a-z0-9-]+\.(com|net|org|io|gg|me|ly|to|xyz|info|biz|co|app|dev|tv|site|online|store|link|click|tk|ml|ga|cf|gq)(\/|\s|$|[?#]))/i;
+    return urlRegex.test(text);
+  }
+
+  function getModerationState() {
+    const raw = JSON.parse(localStorage.getItem("hikariGlobalMod") || '{"warnings":0,"mutedUntil":0}');
+    if (raw.mutedUntil && Date.now() >= raw.mutedUntil) {
+      raw.mutedUntil = 0;
+      raw.warnings = 0;
+      localStorage.setItem("hikariGlobalMod", JSON.stringify(raw));
+    }
+    return raw;
+  }
+
+  function saveModerationState(state) {
+    localStorage.setItem("hikariGlobalMod", JSON.stringify(state));
+  }
+
+  function formatRemainingTime(ms) {
+    const totalSec = Math.max(1, Math.ceil(ms / 1000));
+    const mins = Math.floor(totalSec / 60);
+    const secs = totalSec % 60;
+    return `${mins}m ${secs.toString().padStart(2, '0')}s`;
+  }
+
+  function updateModerationUI(customAlertMsg = null) {
+    const banner = document.getElementById("modAlertBanner");
+    const input = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const pickerToggleBtn = document.getElementById("waPickerToggleBtn");
+    const mod = getModerationState();
+    const isGlobalMuted = !activePrivateUserKey && mod.mutedUntil && Date.now() < mod.mutedUntil;
+
+    if (isGlobalMuted) {
+      const rem = formatRemainingTime(mod.mutedUntil - Date.now());
+      banner.textContent = `Estás silenciado en el Chat Global por enviar enlaces 2 veces. Tiempo restante: ${rem}.`;
+      banner.classList.add("show");
+      input.disabled = true;
+      sendBtn.disabled = true;
+      pickerToggleBtn.disabled = true;
+      closeWaPicker();
+    } else {
+      input.disabled = false;
+      sendBtn.disabled = false;
+      pickerToggleBtn.disabled = false;
+
+      if (customAlertMsg) {
+        banner.textContent = customAlertMsg;
+        banner.classList.add("show");
+      } else {
+        banner.textContent = "";
+        banner.classList.remove("show");
+      }
+    }
+  }
+
+  function registerUrlViolation() {
+    if (activePrivateUserKey) {
+      updateModerationUI("No está permitido enviar enlaces (URLs) en ningún chat.");
+      return;
+    }
+
+    const mod = getModerationState();
+    mod.warnings = (mod.warnings || 0) + 1;
+
+    if (mod.warnings >= 2) {
+      mod.mutedUntil = Date.now() + ONE_HOUR_MS;
+      mod.warnings = 0;
+      saveModerationState(mod);
+      updateModerationUI();
+    } else {
+      saveModerationState(mod);
+      updateModerationUI("No se permiten URLs en ningún chat. Advertencia 1/2: a la 2.ª vez serás silenciado 1 hora en el Chat Global.");
+    }
+  }
+
+  function renderWaPickerContent() {
+    const grid = document.getElementById("waPickerGrid");
+    const tabEmojis = document.getElementById("tabEmojisBtn");
+    const tabStickers = document.getElementById("tabStickersBtn");
+    const tabGifs = document.getElementById("tabGifsBtn");
+
+    tabEmojis.classList.toggle("active", activePickerTab === "emojis");
+    tabStickers.classList.toggle("active", activePickerTab === "stickers");
+    tabGifs.classList.toggle("active", activePickerTab === "gifs");
+    grid.classList.toggle("gifs-mode", activePickerTab === "gifs" && Boolean(activePrivateUserKey));
+
+    if (activePickerTab === "stickers") {
+      if (!activePrivateUserKey) {
+        grid.innerHTML = `<div class="wa-locked-note">Los stickers solo están disponibles en chats privados.</div>`;
+        return;
+      }
+      grid.innerHTML = PRIVATE_STICKERS.map(st => `
+        <button type="button" class="wa-item-btn wa-sticker-item" onclick="sendPrivateSticker('${st}')">${st}</button>
+      `).join('');
+      return;
+    }
+
+    if (activePickerTab === "gifs") {
+      if (!activePrivateUserKey) {
+        grid.innerHTML = `<div class="wa-locked-note">Los GIFs solo están disponibles en chats privados.</div>`;
+        return;
+      }
+      grid.innerHTML = PRIVATE_GIFS.map(g => `
+        <button type="button" class="wa-gif-btn" onclick="sendPrivateGif('${g.id}')">
+          <img src="${g.url}" alt="${escapeHTML(g.label)}" loading="lazy">
+          <span>${escapeHTML(g.label)}</span>
+        </button>
+      `).join('');
+      return;
+    }
+
+    grid.innerHTML = QUICK_EMOJIS.map(em => `
+      <button type="button" class="wa-item-btn" onclick="addEmoji('${em}')">${em}</button>
+    `).join('');
+  }
+
+  function toggleWaPicker() {
+    const mod = getModerationState();
+    if (!activePrivateUserKey && mod.mutedUntil && Date.now() < mod.mutedUntil) return;
+
+    isPickerOpen = !isPickerOpen;
+    const popover = document.getElementById("waPickerPopover");
+    const toggleBtn = document.getElementById("waPickerToggleBtn");
+    popover.classList.toggle("show", isPickerOpen);
+    toggleBtn.classList.toggle("active", isPickerOpen);
+    if (isPickerOpen) {
+      renderWaPickerContent();
+    }
+  }
+
+  function closeWaPicker() {
+    isPickerOpen = false;
+    document.getElementById("waPickerPopover").classList.remove("show");
+    document.getElementById("waPickerToggleBtn").classList.remove("active");
+  }
+
+  function switchPickerTab(tabName) {
+    activePickerTab = tabName;
+    renderWaPickerContent();
+  }
+
+  function getCurrentTimeStr() {
+    const now = new Date();
+    return now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+  }
+
+  function getStoredGlobalMessages() {
     const saved = localStorage.getItem("hikariGlobalChat");
     return saved ? JSON.parse(saved) : defaultMessages;
   }
 
+  function getStoredPrivateMessages(userKey) {
+    const allDMs = JSON.parse(localStorage.getItem("hikariPrivateChats") || "{}");
+    return allDMs[userKey] || [];
+  }
+
+  function savePrivateMessage(userKey, msg) {
+    const allDMs = JSON.parse(localStorage.getItem("hikariPrivateChats") || "{}");
+    if (!allDMs[userKey]) allDMs[userKey] = [];
+    allDMs[userKey].push(msg);
+    localStorage.setItem("hikariPrivateChats", JSON.stringify(allDMs));
+  }
+
+  function getUserProfileData(userKey) {
+    if (demoProfiles[userKey]) {
+      return demoProfiles[userKey];
+    }
+    let parsedTags = ["Anime"];
+    try {
+      const rawLikes = JSON.parse(localStorage.getItem("hikariLikes") || '["Anime"]');
+      if (Array.isArray(rawLikes) && rawLikes.length) parsedTags = rawLikes;
+    } catch (_) {}
+
+    return {
+      fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
+      username: localStorage.getItem("hikariUsername") || "usuario",
+      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      banner: localStorage.getItem("hikariBanner") || localStorage.getItem("hikariAvatar") || "img/Logo.png",
+      bio: localStorage.getItem("hikariBio") || "Explorando Hikari Play.",
+      tags: parsedTags
+    };
+  }
+
+  function renderFriendsBar() {
+    const bar = document.getElementById("friendsBar");
+    const friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+
+    if (!friends.length) {
+      bar.innerHTML = `<span class="friends-empty-hint">Agrega amigos desde su perfil para verlos aquí y hablar al privado.</span>`;
+      return;
+    }
+
+    bar.innerHTML = friends.map(userKey => {
+      const u = getUserProfileData(userKey);
+      const isSelected = activePrivateUserKey === userKey;
+      return `
+        <button type="button" class="friend-chip ${isSelected ? 'active-dm' : ''}" onclick="openPrivateChatWith('${userKey}')">
+          <img src="${u.avatar}" alt="${escapeHTML(u.fullname)}">
+          <span>${escapeHTML(u.fullname)}</span>
+        </button>
+      `;
+    }).join('');
+  }
+
+  function updateRoomHeader() {
+    const titleEl = document.getElementById("roomTitleText");
+    const iconEl = document.getElementById("roomIcon");
+    const backBtn = document.getElementById("backToGlobalBtn");
+    const ribbonTextEl = document.getElementById("chatRulesText");
+    const inputEl = document.getElementById("chatInput");
+    const photoBtn = document.getElementById("privatePhotoBtn");
+
+    if (activePrivateUserKey) {
+      const peer = getUserProfileData(activePrivateUserKey);
+      titleEl.textContent = `Privado · ${peer.fullname}`;
+      iconEl.className = "fas fa-paper-plane";
+      backBtn.style.display = "inline-flex";
+      ribbonTextEl.textContent = `Chat privado con ${peer.fullname} (@${peer.username}): fotos, GIFs y stickers permitidos · Prohibido enviar URLs.`;
+      inputEl.placeholder = `Mensaje privado para ${peer.fullname}...`;
+      photoBtn.classList.add("show");
+    } else {
+      titleEl.textContent = "Chat Global";
+      iconEl.className = "fas fa-comments";
+      backBtn.style.display = "none";
+      ribbonTextEl.textContent = "Sala Global de Hikari Play: solo texto y emojis. Prohibido enviar URLs (2 faltas = 1 hora sin hablar).";
+      inputEl.placeholder = "Escribe un mensaje o emoji...";
+      photoBtn.classList.remove("show");
+      if (activePickerTab === "stickers" || activePickerTab === "gifs") {
+        activePickerTab = "emojis";
+      }
+    }
+
+    if (isPickerOpen) {
+      renderWaPickerContent();
+    }
+  }
+
+  function renderMessageContent(m) {
+    if (m.type === "photo" && m.photoData) {
+      return `<img src="${m.photoData}" class="msg-photo" alt="Foto enviada">`;
+    }
+    if (m.type === "sticker" && m.sticker) {
+      return `<span class="msg-sticker">${escapeHTML(m.sticker)}</span>`;
+    }
+    if (m.type === "gif" && m.gifId) {
+      const gifObj = PRIVATE_GIFS.find(item => item.id === m.gifId);
+      if (gifObj) {
+        return `<img src="${gifObj.url}" class="msg-gif" alt="${escapeHTML(gifObj.label)}">`;
+      }
+    }
+    return `<div class="msg-text">${escapeHTML(m.text || "")}</div>`;
+  }
+
   function renderMessages() {
     const area = document.getElementById("messagesArea");
-    const messages = getStoredMessages();
+    updateRoomHeader();
+    renderFriendsBar();
+    updateModerationUI();
 
-    const noticeHTML = `
-      <div class="system-notice">
-        Sala Global de Hikari Play: solo se permite texto y emojis.
-      </div>
-    `;
+    if (activePrivateUserKey) {
+      const dmMessages = getStoredPrivateMessages(activePrivateUserKey);
+      const msgsHTML = dmMessages.map(m => `
+        <div class="msg-row ${m.isOwn ? 'own' : ''}">
+          <img src="${m.avatar}" class="msg-avatar" alt="Avatar" onclick="openUserCard('${m.userKey}')">
+          <div class="msg-bubble">
+            <div class="msg-meta">
+              <span class="msg-author" onclick="mentionUser('${escapeHTML(m.username)}')">${escapeHTML(m.fullname)}</span>
+              <span class="msg-time">${m.time}</span>
+            </div>
+            ${renderMessageContent(m)}
+          </div>
+        </div>
+      `).join('');
 
+      area.innerHTML = msgsHTML;
+      area.scrollTop = area.scrollHeight;
+      return;
+    }
+
+    const messages = getStoredGlobalMessages();
     const msgsHTML = messages.map(m => `
       <div class="msg-row ${m.isOwn ? 'own' : ''}">
         <img src="${m.avatar}" class="msg-avatar" alt="Avatar" onclick="openUserCard('${m.userKey}')">
         <div class="msg-bubble">
           <div class="msg-meta">
-            <span class="msg-author" onclick="openUserCard('${m.userKey}')">${escapeHTML(m.fullname)}</span>
+            <span class="msg-author" onclick="mentionUser('${escapeHTML(m.username)}')">${escapeHTML(m.fullname)}</span>
             <span class="msg-time">${m.time}</span>
           </div>
-          <div class="msg-text">${escapeHTML(m.text)}</div>
+          ${renderMessageContent(m)}
         </div>
       </div>
     `).join('');
 
-    area.innerHTML = noticeHTML + msgsHTML;
+    area.innerHTML = msgsHTML;
     area.scrollTop = area.scrollHeight;
+  }
+
+  function mentionUser(username) {
+    const input = document.getElementById("chatInput");
+    if (input.disabled) return;
+    const mentionText = `@${username} `;
+    if (!input.value.includes(mentionText)) {
+      input.value = input.value ? `${input.value.trimEnd()} ${mentionText}` : mentionText;
+    }
+    input.focus();
   }
 
   function addEmoji(emoji) {
     const input = document.getElementById("chatInput");
+    if (input.disabled) return;
     input.value += emoji;
     input.focus();
   }
 
-  function sendMessage(e) {
-    e.preventDefault();
-    const input = document.getElementById("chatInput");
-    const rawText = input.value.trim();
-    if (!rawText) return;
-
-    const now = new Date();
-    const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-
-    const newMsg = {
+  function buildOwnBaseMsg() {
+    return {
       id: Date.now(),
       userKey: "currentUser",
       fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
       username: localStorage.getItem("hikariUsername") || "usuario",
       avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
-      text: rawText,
-      time: timeStr,
+      time: getCurrentTimeStr(),
       isOwn: true
     };
+  }
 
-    const messages = getStoredMessages();
-    messages.push(newMsg);
-    localStorage.setItem("hikariGlobalChat", JSON.stringify(messages));
+  function sendMessage(e) {
+    e.preventDefault();
+    const input = document.getElementById("chatInput");
+    if (input.disabled) return;
+
+    const rawText = input.value.trim();
+    if (!rawText) return;
+
+    if (containsURL(rawText)) {
+      registerUrlViolation();
+      return;
+    }
+
+    const newMsg = {
+      ...buildOwnBaseMsg(),
+      type: "text",
+      text: rawText
+    };
+
+    if (activePrivateUserKey) {
+      savePrivateMessage(activePrivateUserKey, newMsg);
+    } else {
+      const messages = getStoredGlobalMessages();
+      messages.push(newMsg);
+      localStorage.setItem("hikariGlobalChat", JSON.stringify(messages));
+    }
 
     input.value = "";
+    closeWaPicker();
+    updateModerationUI();
     renderMessages();
   }
 
-  function openUserCard(userKey) {
-    const u = demoProfiles[userKey] || {
-      fullname: localStorage.getItem("hikariFullname") || "Usuario Hikari",
-      username: localStorage.getItem("hikariUsername") || "usuario",
-      avatar: localStorage.getItem("hikariAvatar") || "img/Logo.png",
-      bio: localStorage.getItem("hikariBio") || "Explorando Hikari Play.",
-      tags: JSON.parse(localStorage.getItem("hikariLikes") || '["Anime"]')
+  function sendPrivateSticker(sticker) {
+    if (!activePrivateUserKey) return;
+    const newMsg = {
+      ...buildOwnBaseMsg(),
+      type: "sticker",
+      sticker
     };
+    savePrivateMessage(activePrivateUserKey, newMsg);
+    closeWaPicker();
+    renderMessages();
+  }
+
+  function sendPrivateGif(gifId) {
+    if (!activePrivateUserKey) return;
+    const gifObj = PRIVATE_GIFS.find(item => item.id === gifId);
+    if (!gifObj) return;
+
+    const newMsg = {
+      ...buildOwnBaseMsg(),
+      type: "gif",
+      gifId: gifObj.id
+    };
+    savePrivateMessage(activePrivateUserKey, newMsg);
+    closeWaPicker();
+    renderMessages();
+  }
+
+  function handlePrivatePhoto(e) {
+    if (!activePrivateUserKey) return;
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      updateModerationUI("Solo se permiten archivos de imagen en el chat privado.");
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const newMsg = {
+        ...buildOwnBaseMsg(),
+        type: "photo",
+        photoData: ev.target.result
+      };
+      savePrivateMessage(activePrivateUserKey, newMsg);
+      e.target.value = "";
+      closeWaPicker();
+      renderMessages();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function openPrivateChatWith(userKey) {
+    activePrivateUserKey = userKey;
+    renderMessages();
+    if (!document.getElementById("chatInput").disabled) {
+      document.getElementById("chatInput").focus();
+    }
+  }
+
+  function openGlobalChat() {
+    activePrivateUserKey = null;
+    renderMessages();
+  }
+
+  function refreshActionButtonsState(userKey) {
+    const likes = JSON.parse(localStorage.getItem("hikariLikedUsers") || "[]");
+    const friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+
+    const isLiked = likes.includes(userKey);
+    const isFriend = friends.includes(userKey);
+
+    const btnLike = document.getElementById("btnLikeUser");
+    const labelLike = document.getElementById("labelLikeUser");
+    btnLike.classList.toggle("active-like", isLiked);
+    labelLike.textContent = isLiked ? "Te gusta" : "Me gusta";
+
+    const btnFriend = document.getElementById("btnFriendUser");
+    const labelFriend = document.getElementById("labelFriendUser");
+    btnFriend.classList.toggle("active-friend", isFriend);
+    labelFriend.textContent = isFriend ? "Amigo" : "Agregar";
+  }
+
+  function openUserCard(userKey) {
+    activeModalUserKey = userKey;
+    const u = getUserProfileData(userKey);
 
     document.getElementById("miniName").textContent = u.fullname;
     document.getElementById("miniUser").textContent = "@" + u.username;
     document.getElementById("miniAvatar").src = u.avatar;
+    document.getElementById("miniBannerImg").src = u.banner || u.avatar;
     document.getElementById("miniBio").textContent = u.bio;
-    document.getElementById("miniTags").innerHTML = u.tags.map(t => `<span class="mini-tag">${escapeHTML(t)}</span>`).join('');
+    document.getElementById("miniProfileLink").href =
+      userKey === "currentUser"
+        ? "perfil.html"
+        : `perfil.html?user=${encodeURIComponent(u.username)}`;
 
+    const tagsEl = document.getElementById("miniTags");
+    tagsEl.innerHTML = u.tags.length
+      ? u.tags.map(t => `<span class="mini-tag">${escapeHTML(t)}</span>`).join('')
+      : `<span class="mini-tag">Hikari Play</span>`;
+
+    refreshActionButtonsState(userKey);
     document.getElementById("miniProfileModal").classList.add("show");
   }
 
+  function toggleLikeUser() {
+    if (!activeModalUserKey) return;
+    let likes = JSON.parse(localStorage.getItem("hikariLikedUsers") || "[]");
+    if (likes.includes(activeModalUserKey)) {
+      likes = likes.filter(k => k !== activeModalUserKey);
+    } else {
+      likes.push(activeModalUserKey);
+    }
+    localStorage.setItem("hikariLikedUsers", JSON.stringify(likes));
+    refreshActionButtonsState(activeModalUserKey);
+  }
+
+  function toggleFriendUser() {
+    if (!activeModalUserKey) return;
+    let friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+    if (friends.includes(activeModalUserKey)) {
+      friends = friends.filter(k => k !== activeModalUserKey);
+      if (activePrivateUserKey === activeModalUserKey) {
+        activePrivateUserKey = null;
+      }
+    } else {
+      friends.push(activeModalUserKey);
+    }
+    localStorage.setItem("hikariFriendUsers", JSON.stringify(friends));
+    refreshActionButtonsState(activeModalUserKey);
+    renderFriendsBar();
+    if (!activePrivateUserKey) renderMessages();
+  }
+
+  function startPrivateChat() {
+    if (!activeModalUserKey) return;
+    let friends = JSON.parse(localStorage.getItem("hikariFriendUsers") || "[]");
+    if (!friends.includes(activeModalUserKey)) {
+      friends.push(activeModalUserKey);
+      localStorage.setItem("hikariFriendUsers", JSON.stringify(friends));
+    }
+    const targetKey = activeModalUserKey;
+    closeMiniProfile();
+    openPrivateChatWith(targetKey);
+  }
+
   function closeMiniProfile(e) {
-    if (e.target.id === "miniProfileModal") {
+    if (!e || e.target.id === "miniProfileModal") {
       document.getElementById("miniProfileModal").classList.remove("show");
     }
   }
 
-  document.addEventListener("DOMContentLoaded", renderMessages);
+  document.addEventListener("click", (e) => {
+    const popover = document.getElementById("waPickerPopover");
+    const toggleBtn = document.getElementById("waPickerToggleBtn");
+    if (isPickerOpen && !popover.contains(e.target) && !toggleBtn.contains(e.target)) {
+      closeWaPicker();
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMessages();
+    moderationInterval = setInterval(() => {
+      updateModerationUI();
+    }, 1000);
+  });
 </script>
 
 <script>
