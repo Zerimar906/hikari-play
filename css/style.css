@@ -1,234 +1,296 @@
-/* ==========================================
-   Hikari Play - Estilos Unificados (Detalle y Base)
-   ========================================== */
+/* =========================================================
+   Hikari Play - Estilos base, modo oscuro fijo y adaptable
+   ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=PT+Sans&display=swap');
-
-/* Evitar selección de texto y menú largo en móvil */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
+body#mainCont {
+  background: #0d0f14 !important;
+  color: #f3f5f9 !important;
+  font-family: 'Nunito', 'PT Sans', sans-serif;
+  padding-bottom: 32px;
+  overflow-x: hidden;
 }
 
-/* Permitir escribir y seleccionar dentro de campos de texto */
-input,
-textarea {
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
-    user-select: text;
-    -webkit-touch-callout: default;
+/* Cabecera */
+#header .headCn {
+  background: rgba(15, 18, 25, 0.94) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #eef1f7 !important;
 }
 
-body {
-    background: #0d0f14;
-    color: #f3f5f9;
-    font-family: 'Nunito', 'PT Sans', sans-serif;
-    margin: 0;
-    padding-bottom: 32px;
+#header .tIc {
+  color: #eef1f7 !important;
 }
 
-.hidden {
-    display: none !important;
+/* Menú lateral (drawer deslizable limpio sin franjas ni cortes) */
+.blogMn .mnBr,
+.blogMn .mnBrs {
+  background-color: #151922 !important;
+  background: #151922 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  color: #eef1f7 !important;
+  max-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Modo oscuro base de la clase .drK */
-body.drK {
-    background-color: #090b10 !important;
-    color: #f3f5f9 !important;
+/* Evita que el menú quede visible como columna estrecha cuando no está abierto */
+body:not(.openNav) #offNav:not(:checked) ~ .mainWrp .blogMn .mnBr {
+  transform: translateX(-100%);
+  visibility: hidden;
+  pointer-events: none;
 }
 
-/* ==========================================
-   Estilos específicos para Páginas de Detalle (Series/Películas)
-   ========================================== */
-.Wallpaper {
-    width: 100%;
-    height: 250px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden;
+#offNav:checked ~ .mainWrp .blogMn .mnBr {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
-.Wallpaper::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(13, 15, 20, 0.25) 0%,
-        rgba(13, 15, 20, 0.72) 72%,
-        #0d0f14 100%
-    );
-    pointer-events: none;
+.mnH,
+.mnH .c,
+.mnMob,
+.mnMen,
+.mMenu li,
+.mMenu li a {
+  background-color: transparent !important;
+  color: #cbd5e1 !important;
 }
 
-.ConjuntoHeadCont {
-    max-width: 960px;
-    margin: -56px auto 0 auto;
-    position: relative;
-    z-index: 2;
-    padding: 0 14px;
+.mnMn li.br {
+  border-color: rgba(255, 255, 255, 0.06) !important;
 }
 
-.ConjuntoHeadCont::after {
-    content: "";
-    display: table;
-    clear: both;
+.mnMn li.br a.a {
+  background-color: transparent !important;
+  color: #dbe2f1 !important;
+  border-radius: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.SingleHead img {
-    width: 112px;
-    aspect-ratio: 2 / 3;
-    height: auto;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
-    background: #151922;
-    float: left;
-    margin-right: 14px;
+.mnMn li.br a.a:hover {
+  background: rgba(64, 121, 255, 0.16) !important;
+  color: #79a8ff !important;
 }
 
-.movie-section-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: #eef1f7;
-    display: block;
-    padding-top: 62px;
-    line-height: 1.25;
+/* Slider automático con sombreado difuminado */
+#slider {
+  position: relative;
+  max-width: 1140px;
+  width: calc(100% - 40px);
+  margin: 16px auto 14px auto;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #151922;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  height: auto !important;
+  min-height: 0 !important;
 }
 
-.info-details {
-    max-width: 960px;
-    margin: 18px auto 0 auto;
-    line-height: 1.65;
-    font-size: 0.94rem;
-    color: #b8c1d4;
-    background: #151922;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 14px;
-    padding: 14px 16px;
+/* Sombreado difuminado suave arriba, abajo y en los bordes */
+#slider::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background:
+    linear-gradient(to top, rgba(13, 15, 20, 0.78) 0%, rgba(13, 15, 20, 0.18) 38%, transparent 65%),
+    linear-gradient(to right, rgba(13, 15, 20, 0.35) 0%, transparent 14%, transparent 86%, rgba(13, 15, 20, 0.35) 100%);
 }
 
-/* Acordeón de Capítulos */
-.accordion {
-    width: 100%;
-    max-width: 680px;
-    margin: 22px auto 24px auto;
-    background: #151922;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    overflow: hidden;
-    list-style: none;
-    padding: 0;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+#slider figure {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  z-index: 1;
+  transform: none !important;
+  scrollbar-width: none;
 }
 
-.accordion > li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+#slider figure::-webkit-scrollbar {
+  display: none;
 }
 
-.accordion > li:last-child {
-    border-bottom: 0;
+#slider figure > a {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  line-height: 0 !important;
+  display: block !important;
 }
 
-.accordion .link {
-    cursor: pointer;
-    display: block;
-    padding: 14px 40px 14px 44px;
-    color: #eef1f7;
-    font-size: 0.92rem;
-    font-weight: 700;
-    position: relative;
-    transition: background 0.2s ease, color 0.2s ease;
+#slider figure > a > img,
+#slider figure img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: cover;
+  transform: none !important;
+  display: block !important;
 }
 
-.accordion .link:hover {
-    background: rgba(64, 121, 255, 0.1);
-    color: #6ea0ff;
+/* Encabezados de categoría */
+.poster {
+  max-width: 1140px;
+  margin: 18px auto 10px auto;
+  padding: 0 14px;
 }
 
-.accordion li i {
-    position: absolute;
-    top: 15px;
-    left: 14px;
-    font-size: 1rem;
-    color: #8b95ad;
-    transition: transform 0.28s ease, color 0.2s ease;
+.poster a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  padding: 4px 2px;
 }
 
-.accordion li i.fa-chevron-down {
-    right: 14px;
-    left: auto;
-    font-size: 0.85rem;
+.poster h4.alignleft {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #eef1f7;
+  letter-spacing: 0.2px;
 }
 
-.accordion li.open .link {
-    color: #6ea0ff;
-    background: rgba(64, 121, 255, 0.12);
+.poster h4.alignleft:empty,
+.poster h4.alignright:empty {
+  display: none;
 }
 
-.accordion li.open i {
-    color: #6ea0ff;
+.poster h4.alignright {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #8ab2ff;
+  background: rgba(64, 121, 255, 0.14);
+  border: 1px solid rgba(64, 121, 255, 0.35);
+  padding: 4px 10px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.accordion li.open i.fa-chevron-down {
-    transform: rotate(180deg);
+.poster a:hover h4.alignright {
+  background: #4079ff;
+  color: #fff;
 }
 
-.submenu {
-    display: none;
-    background: #11151d;
-    font-size: 0.88rem;
-    list-style: none;
-    padding: 4px 0;
-    margin: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+/* Filas horizontales de tarjetas */
+.scrollmenu {
+  max-width: 1140px;
+  margin: 0 auto 8px auto;
+  padding: 2px 14px 8px 14px;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
-.submenu li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+.scrollmenu::-webkit-scrollbar {
+  height: 5px;
 }
 
-.submenu li:last-child {
-    border-bottom: 0;
+.scrollmenu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
 }
 
-.submenu a {
-    display: block;
-    text-decoration: none;
-    color: #c7d0e2;
-    font-weight: 600;
-    padding: 11px 16px 11px 44px;
-    transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+.scrollmenu > a {
+  flex: 0 0 124px;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.submenu a:hover {
-    background: rgba(64, 121, 255, 0.12);
-    color: #ffffff;
-    padding-left: 48px;
+.scrollmenu .xplus {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: #151922;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* ==========================================
-   Ícono personalizado en menú lateral (blanco en oscuro + hover azul)
-   ========================================== */
-.mnMn li.br a.a .menu-custom-icon {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain;
-    flex-shrink: 0;
-    filter: brightness(0) invert(1) !important;
-    transition: filter 0.15s ease, transform 0.15s ease;
+.scrollmenu > a:hover .xplus,
+.scrollmenu > a:active .xplus {
+  transform: translateY(-3px);
+  border-color: rgba(64, 121, 255, 0.55);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
 }
 
-.mnMn li.br a.a:hover .menu-custom-icon {
-    filter: brightness(0) saturate(100%) invert(56%) sepia(74%) saturate(2274%) hue-rotate(202deg) brightness(102%) contrast(101%) !important;
+.scrollmenu .xplus img.xaviec {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.scrollmenu > a:hover .xplus img.xaviec {
+  transform: scale(1.04);
+}
+
+/* =========================================================
+   Adaptación por tamaño de pantalla (iPad / Tablet / PC)
+   ========================================================= */
+@media (min-width: 640px) {
+  .scrollmenu > a {
+    flex: 0 0 146px;
+  }
+
+  #slider {
+    margin: 16px auto 10px auto;
+    width: calc(100% - 28px);
+  }
+}
+
+@media (min-width: 768px) {
+  .poster,
+  .scrollmenu {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .scrollmenu {
+    gap: 14px;
+  }
+
+  .scrollmenu > a {
+    flex: 0 0 156px;
+  }
+}
+
+/* =========================================================
+   Adaptación por orientación horizontal (landscape)
+   ========================================================= */
+@media (orientation: landscape) and (max-height: 540px) {
+  #slider {
+    margin-top: 10px;
+  }
+
+  .poster {
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
 }
