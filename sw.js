@@ -1,12 +1,13 @@
-const CACHE_NAME = "hikari-play-v1";
+const CACHE_NAME = "hikari-play-v2";
 const ASSETS_TO_CACHE = [
-  "/hikari-play/",
-  "/hikari-play/index.html",
-  "/hikari-play/login.html",
-  "/hikari-play/perfil.html",
-  "/hikari-play/editar-perfil.html",
-  "/hikari-play/css/style.css",
-  "/hikari-play/img/Logo.png"
+  "./",
+  "./index.html",
+  "./login.html",
+  "./perfil.html",
+  "./editar-perfil.html",
+  "./css/style.css",
+  "./auth.js",
+  "./img/Logo.png"
 ];
 
 self.addEventListener("install", (event) => {

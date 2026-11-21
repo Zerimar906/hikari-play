@@ -24,12 +24,24 @@
   html, body {
     overflow: hidden !important;
     height: 100%;
+    background: #15171e !important;
+    color: #f5f5f5 !important;
   }
 
-  /* Mantener header y menú lateral por encima del chat fijo */
+  /* Mantener header y menú lateral fijos en oscuro por encima del chat */
   #header {
     position: relative;
     z-index: 500;
+  }
+
+  #header .headCn {
+    background: #15171e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #eef1f7 !important;
+  }
+
+  #header .tIc {
+    color: #eef1f7 !important;
   }
 
   .blogMn {
@@ -40,13 +52,37 @@
     z-index: 995 !important;
   }
 
-  .blogMn .mnBr {
+  .blogMn .mnBr,
+  .blogMn .mnBrs {
     z-index: 1000 !important;
-    background-color: #ffffff;
+    background-color: #15171e !important;
+    background: #15171e !important;
+    color: #eef1f7 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  body.drK .blogMn .mnBr {
-    background-color: #15171e !important;
+  .mnH,
+  .mnH .c,
+  .mnMob,
+  .mnMen,
+  .mMenu li,
+  .mMenu li a {
+    background-color: transparent !important;
+    color: #cbd5e1 !important;
+  }
+
+  .mnMn li.br {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .mnMn li.br a.a {
+    background-color: transparent !important;
+    color: #dbe2f1 !important;
+  }
+
+  .mnMn li.br a.a:hover {
+    background: rgba(64, 121, 255, 0.16) !important;
+    color: #79a8ff !important;
   }
 
   /* Sección fija debajo del header sin scroll de página */
@@ -113,7 +149,7 @@
     gap: 5px;
   }
 
-  /* Cinta sencilla como la primera, pero desplazándose suavemente */
+  /* Cinta sencilla desplazándose suavemente */
   .chat-rules-ribbon {
     background: rgba(255,255,255,0.04);
     border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -517,9 +553,7 @@
     flex-shrink: 0;
   }
 
-  /* ==========================================
-     Ventanita Flotante Resumen de Perfil
-     ========================================== */
+  /* Ventanita Flotante Resumen de Perfil */
   .mini-profile-modal {
     position: fixed;
     inset: 0;
@@ -713,8 +747,8 @@
   }
 </style>
 </head>
-<body class='oneGrd MN-2 mobS hdMn bD onIndx onHm' id='mainCont'>
-<script>/*<![CDATA[*/ (localStorage.getItem('mode')) === 'darkmode' ? document.querySelector('#mainCont').classList.add('drK') : document.querySelector('#mainCont').classList.remove('drK') /*]]>*/</script>
+<body class='oneGrd MN-2 mobS hdMn bD onIndx onHm drK' id='mainCont'>
+<script>/*<![CDATA[*/ localStorage.setItem('mode', 'darkmode'); /*]]>*/</script>
 
 <input class='prfI hidden' id='offPrf' type='checkbox' />
 <input class='navI hidden' id='offNav' type='checkbox' />
@@ -747,14 +781,6 @@
           <div class='headP section' id='header-icon'>
             <div class='widget TextList' data-version='2' id='TextList000'>
               <ul class='headIc'>
-                <li class='isDrk'>
-                  <span aria-label='Dark' class='tDark tIc tDL bIc' onclick='darkMode()' role='button'>
-                    <svg class='line' viewBox='0 0 24 24'>
-                      <g class='d1'><path d='M183.72453,170.371a10.4306,10.4306,0,0,1-.8987,3.793,11.19849,11.19849,0,0,1-5.73738,5.72881,10.43255,10.43255,0,0,1-3.77582.89138,1.99388,1.99388,0,0,0-1.52447,3.18176,10.82936,10.82936,0,1,0,15.118-15.11819A1.99364,1.99364,0,0,0,183.72453,170.371Z' transform='translate(-169.3959 -166.45548)'></path></g>
-                      <g class='d2'><path class='f' d='M12 18.5C15.5899 18.5 18.5 15.5899 18.5 12C18.5 8.41015 15.5899 5.5 12 5.5C8.41015 5.5 5.5 8.41015 5.5 12C5.5 15.5899 8.41015 18.5 12 18.5Z'></path><path d='M19.14 19.14L19.01 19.01M19.01 4.99L19.14 4.86L19.01 4.99ZM4.86 19.14L4.99 19.01L4.86 19.14ZM12 2.08V2V2.08ZM12 22V21.92V22ZM2.08 12H2H2.08ZM22 12H21.92H22ZM4.99 4.99L4.86 4.86L4.99 4.99Z' stroke-width='2'></path></g>
-                    </svg>
-                  </span>
-                </li>
                 <li>
                   <a href="buscador.html">
                     <span aria-label='Search' class='tSrch tIc bIc'>
@@ -792,8 +818,8 @@
           <div class='mnMob section' id='nav-widget-1'>
             <div class='widget PageList' data-version='2' id='PageList002'>
               <ul class='mMenu'>
-                <a>Telegram</a>                         
-                <a>Zerimar</a>
+                <li><a>Telegram</a></li>                         
+                <li><a>Zerimar</a></li>
               </ul>
             </div>
             <div class='widget LinkList' data-version='2' id='LinkList002'>
